@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AppShell } from "@/components/layout/AppShell";
+import { FiltrosProvider } from "@/lib/pqrs-filters";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,11 +80,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Dashboard de Indicadores PQRS" },
+      {
+        name: "description",
+        content:
+          "Plataforma analítica de PQRS: causas raíz, prestadores, regionales y tendencias.",
+      },
+      { property: "og:title", content: "Dashboard de Indicadores PQRS" },
+      {
+        property: "og:description",
+        content: "Convierte los datos de PQRS en decisiones para la mejora continua.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -119,8 +128,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <FiltrosProvider>
+        <AppShell>
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </AppShell>
+        <Toaster />
+      </FiltrosProvider>
     </QueryClientProvider>
   );
 }

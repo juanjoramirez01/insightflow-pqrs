@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CausasRouteImport } from './routes/causas'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as PrestadoresRouteImport } from './routes/prestadores'
+import { Route as RegionalesRouteImport } from './routes/regionales'
+import { Route as ReportesRouteImport } from './routes/reportes'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CausasRoute = CausasRouteImport.update({
+  id: '/causas',
+  path: '/causas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrestadoresRoute = PrestadoresRouteImport.update({
+  id: '/prestadores',
+  path: '/prestadores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegionalesRoute = RegionalesRouteImport.update({
+  id: '/regionales',
+  path: '/regionales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportesRoute = ReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/causas': typeof CausasRoute
+  '/dashboard': typeof DashboardRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
+  '/reportes': typeof ReportesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/causas': typeof CausasRoute
+  '/dashboard': typeof DashboardRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
+  '/reportes': typeof ReportesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/causas': typeof CausasRoute
+  '/dashboard': typeof DashboardRoute
+  '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
+  '/reportes': typeof ReportesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/causas'
+    | '/dashboard'
+    | '/prestadores'
+    | '/regionales'
+    | '/reportes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/causas'
+    | '/dashboard'
+    | '/prestadores'
+    | '/regionales'
+    | '/reportes'
+  id:
+    | '__root__'
+    | '/'
+    | '/causas'
+    | '/dashboard'
+    | '/prestadores'
+    | '/regionales'
+    | '/reportes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CausasRoute: typeof CausasRoute
+  DashboardRoute: typeof DashboardRoute
+  PrestadoresRoute: typeof PrestadoresRoute
+  RegionalesRoute: typeof RegionalesRoute
+  ReportesRoute: typeof ReportesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +117,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/causas': {
+      id: '/causas'
+      path: '/causas'
+      fullPath: '/causas'
+      preLoaderRoute: typeof CausasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/prestadores': {
+      id: '/prestadores'
+      path: '/prestadores'
+      fullPath: '/prestadores'
+      preLoaderRoute: typeof PrestadoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/regionales': {
+      id: '/regionales'
+      path: '/regionales'
+      fullPath: '/regionales'
+      preLoaderRoute: typeof RegionalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reportes': {
+      id: '/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof ReportesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CausasRoute: CausasRoute,
+  DashboardRoute: DashboardRoute,
+  PrestadoresRoute: PrestadoresRoute,
+  RegionalesRoute: RegionalesRoute,
+  ReportesRoute: ReportesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
