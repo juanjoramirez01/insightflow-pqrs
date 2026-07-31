@@ -23,7 +23,7 @@ const axis = { fontSize: 11, fill: "var(--muted-foreground)" };
 export function DashboardCharts({ data }: { data: PqrsRecord[] }) {
   const porServicio = contarPor(data, "tipoServicio");
   const porRegional = contarPor(data, "regional");
-  const topPrestadores = contarPor(data, "prestador").slice(0, 7);
+  const topAnalistas = contarPor(data, "analista").slice(0, 7);
   const serie = tendencia(data);
   const porCausa = contarPor(data, "causa");
   const totalCausas = porCausa.reduce((a, b) => a + b.value, 0);
@@ -86,16 +86,16 @@ export function DashboardCharts({ data }: { data: PqrsRecord[] }) {
       </ChartCard>
 
       <ChartCard
-        title="Top de prestadores"
-        description="IPS homologadas con mayor número de PQRS"
+        title="Top de responsables de gestión"
+        description="Analistas con mayor volumen de casos asignados"
       >
-        {topPrestadores.length === 0 ? (
+        {topAnalistas.length === 0 ? (
           <EmptyState />
         ) : (
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={topPrestadores}
+                data={topAnalistas}
                 layout="vertical"
                 margin={{ top: 4, right: 24, left: 8, bottom: 4 }}
               >

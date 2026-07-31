@@ -45,11 +45,12 @@ const pct = (actual: number, previo: number) =>
 
 function resumen(data: PqrsRecord[]) {
   const total = data.length;
-  const abiertas = data.filter((r) => r.estado !== "Cerrada").length;
-  const cerradas = data.filter((r) => r.estado === "Cerrada").length;
+  const abiertas = data.filter((r) => !r.cerrada).length;
+  const cerradas = data.filter((r) => r.cerrada).length;
   const recurrencia = total ? (data.filter((r) => r.recurrente).length / total) * 100 : 0;
-  const tiempoPromedio = total
-    ? data.reduce((acc, r) => acc + r.tiempoGestion, 0) / total
+  const conCierre = data.filter((r) => r.cerrada && r.tiempoGestion > 0);
+  const tiempoPromedio = conCierre.length
+    ? conCierre.reduce((acc, r) => acc + r.tiempoGestion, 0) / conCierre.length
     : 0;
   return { total, abiertas, cerradas, recurrencia, tiempoPromedio };
 }

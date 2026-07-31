@@ -15,7 +15,7 @@ export const Route = createFileRoute("/dashboard")({
       {
         name: "description",
         content:
-          "Indicadores, filtros globales y análisis multidimensional de PQRS por causa, servicio, regional y prestador.",
+          "Indicadores, filtros globales y análisis multidimensional de PQRS por causa, servicio, regional y responsable.",
       },
       { property: "og:title", content: "Dashboard de Indicadores PQRS" },
       {

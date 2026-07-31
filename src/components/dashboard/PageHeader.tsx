@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PQRS_DATA, RANGO_FECHAS } from "@/data/pqrs";
 
 export function PageHeader({
   title,
@@ -28,10 +29,10 @@ export function PageHeader({
 
 export function DemoNotice() {
   return (
-    <p className="rounded-lg border border-warning/30 bg-warning/10 px-3 py-2 text-xs text-foreground">
-      <span className="font-semibold">Aviso:</span> los datos presentados son{" "}
-      <span className="font-semibold">ficticios y únicamente demostrativos</span>; no corresponden a
-      información real de la organización.
+    <p className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-foreground">
+      <span className="font-semibold">Fuente:</span> datos reales de PQRS cargados desde el archivo
+      institucional ({PQRS_DATA.length.toLocaleString("es-CO")} casos ·{" "}
+      {RANGO_FECHAS.desde} a {RANGO_FECHAS.hasta}).
     </p>
   );
 }

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   PERIODOS,
-  PRESTADORES,
+  ANALISTAS,
   REGIONALES,
   TIPOS_SERVICIO,
   CAUSAS,
@@ -104,11 +104,11 @@ export function FiltersPanel({ jerarquicos = true }: { jerarquicos?: boolean }) 
           onChange={set("tipoServicio")}
         />
         <FiltroSelect
-          label="Prestador / IPS"
-          value={filtros.prestador}
-          todosLabel="Todos los prestadores"
-          options={opts(PRESTADORES)}
-          onChange={set("prestador")}
+          label="Responsable de gestión"
+          value={filtros.analista}
+          todosLabel="Todos los responsables"
+          options={opts(ANALISTAS)}
+          onChange={set("analista")}
         />
         {jerarquicos ? (
           <>

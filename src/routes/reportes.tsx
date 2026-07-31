@@ -56,8 +56,10 @@ function ReportesPage() {
       "subcausa",
       "detalle",
       "tipoServicio",
-      "prestadorCrm",
-      "prestador",
+      "servicioRaw",
+      "analista",
+      "prioridad",
+      "tipoCaso",
       "regional",
       "estado",
       "tiempoGestion",
@@ -71,10 +73,10 @@ function ReportesPage() {
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
     const a = document.createElement("a");
     a.href = url;
-    a.download = "reporte-pqrs-demo.csv";
+    a.download = "reporte-pqrs.csv";
     a.click();
     URL.revokeObjectURL(url);
-    toast.success(`Reporte exportado (${data.length} registros demostrativos)`);
+    toast.success(`Reporte exportado (${data.length} registros)`);
   };
 
   const estadoColor = (estado: string) =>
@@ -122,7 +124,7 @@ function ReportesPage() {
                       <TableHead>Subcausa</TableHead>
                       <TableHead>Detalle</TableHead>
                       <TableHead>Servicio</TableHead>
-                      <TableHead>IPS homologada</TableHead>
+                      <TableHead>Responsable</TableHead>
                       <TableHead>Regional</TableHead>
                       <TableHead>Estado</TableHead>
                       <TableHead className="text-right">Días</TableHead>
@@ -137,7 +139,7 @@ function ReportesPage() {
                         <TableCell className="whitespace-nowrap text-xs">{r.subcausa}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.detalle}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.tipoServicio}</TableCell>
-                        <TableCell className="whitespace-nowrap text-xs">{r.prestador}</TableCell>
+                        <TableCell className="whitespace-nowrap text-xs">{r.analista}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.regional}</TableCell>
                         <TableCell>
                           <Badge variant="secondary" className={estadoColor(r.estado)}>
