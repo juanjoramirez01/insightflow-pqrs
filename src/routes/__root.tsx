@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppShell } from "@/components/layout/AppShell";
 import { FiltrosProvider } from "@/lib/pqrs-filters";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -132,6 +133,7 @@ function RootComponent() {
           {/* Required: nested routes render here. */}
           <Outlet />
         </AppShell>
+        <Toaster />
       </FiltrosProvider>
     </QueryClientProvider>
   );
