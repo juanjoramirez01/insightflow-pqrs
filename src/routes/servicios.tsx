@@ -15,50 +15,50 @@ import { HOMOLOGACION, HOMOLOGACION_METRICAS } from "@/data/pqrs";
 import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor } from "@/lib/pqrs-metrics";
 
-export const Route = createFileRoute("/prestadores")({
+export const Route = createFileRoute("/servicios")({
   head: () => ({
     meta: [
-      { title: "Prestadores y homologación de IPS | PQRS" },
+      { title: "Servicios y homologación | Dashboard PQRS" },
       {
         name: "description",
         content:
-          "Ranking de prestadores y proceso de homologación de IPS para evitar la dispersión de indicadores.",
+          "Ranking de servicios reportados y homologación de la nomenclatura del CRM para indicadores comparables.",
       },
-      { property: "og:title", content: "Prestadores y homologación de IPS" },
+      { property: "og:title", content: "Servicios y homologación | Dashboard PQRS" },
       {
         property: "og:description",
-        content: "Unificación de nomenclatura de prestadores y ranking de PQRS por IPS.",
+        content: "Unificación de nomenclatura de servicios y ranking de PQRS por servicio homologado.",
       },
     ],
   }),
-  component: PrestadoresPage,
+  component: ServiciosPage,
 });
 
 const PASOS = [
-  "Registros CRM",
-  "Detección de duplicados",
-  "Unificación de nomenclatura",
-  "Homologación",
-  "IPS consolidada",
+  "Texto libre del CRM",
+  "Limpieza y normalización",
+  "Reglas de homologación",
+  "Servicio estandarizado",
+  "Indicador comparable",
 ];
 
-function PrestadoresPage() {
+function ServiciosPage() {
   const { data } = useFiltros();
-  const ranking = contarPor(data, "analista");
+  const ranking = contarPor(data, "tipoServicio");
   const total = data.length;
 
   const metricas = [
-    { icon: Building2, label: "Prestadores registrados (CRM)", value: HOMOLOGACION_METRICAS.registrosCrm },
-    { icon: Copy, label: "Registros duplicados detectados", value: HOMOLOGACION_METRICAS.duplicados },
-    { icon: GitMerge, label: "Prestadores homologados", value: HOMOLOGACION_METRICAS.homologados },
+    { icon: Building2, label: "Variantes de servicio en el CRM", value: HOMOLOGACION_METRICAS.registrosCrm },
+    { icon: Copy, label: "Variantes consolidadas", value: HOMOLOGACION_METRICAS.duplicados },
+    { icon: GitMerge, label: "Servicios homologados", value: HOMOLOGACION_METRICAS.homologados },
     { icon: ShieldCheck, label: "% de homologación", value: `${HOMOLOGACION_METRICAS.porcentaje}%` },
   ];
 
   return (
     <div className="min-w-0 pb-12">
       <PageHeader
-        title="Prestadores e IPS"
-        subtitle="Ranking de prestadores y homologación de nomenclatura para indicadores confiables"
+        title="Servicios y homologación"
+        subtitle="Cómo se estandarizan los servicios reportados en el CRM para obtener indicadores confiables"
       >
         <div className="lg:max-w-md">
           <DemoNotice />
@@ -81,10 +81,10 @@ function PrestadoresPage() {
         </div>
 
         <section className="rounded-xl border border-border bg-card p-5 shadow-card">
-          <h2 className="text-lg font-semibold">Homologación de Prestadores</h2>
+          <h2 className="text-lg font-semibold">Homologación de servicios</h2>
           <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-            Una misma institución puede registrarse con distintos nombres en el CRM. La homologación
-            unifica esos registros y evita la dispersión de los indicadores por prestador.
+            Un mismo servicio se registra con múltiples redacciones en el CRM. La homologación unifica
+            esas variantes y evita la dispersión de los indicadores por servicio.
           </p>
           <div className="mt-5 flex flex-col gap-2 lg:flex-row lg:items-center">
             {PASOS.map((p, i) => (
@@ -103,17 +103,19 @@ function PrestadoresPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Registro CRM</TableHead>
-                  <TableHead>IPS homologada</TableHead>
+                  <TableHead>Texto registrado en el CRM</TableHead>
+                  <TableHead>Servicio homologado</TableHead>
+                  <TableHead className="text-right">Casos</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {HOMOLOGACION.map((h) => (
+                {HOMOLOGACION.slice(0, 60).map((h) => (
                   <TableRow key={h.crm}>
                     <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">
                       {h.crm}
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-sm font-medium">{h.ips}</TableCell>
+                    <TableCell className="text-right text-xs text-muted-foreground">{h.casos}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -122,8 +124,8 @@ function PrestadoresPage() {
         </section>
 
         <ChartCard
-          title="Ranking de prestadores"
-          description="PQRS por IPS homologada según los filtros aplicados"
+          title="Ranking de servicios"
+          description="PQRS por servicio homologado según los filtros aplicados"
         >
           {total === 0 ? (
             <EmptyState />
@@ -133,7 +135,7 @@ function PrestadoresPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
-                    <TableHead>IPS homologada</TableHead>
+                    <TableHead>Servicio homologado</TableHead>
                     <TableHead className="text-right">PQRS</TableHead>
                     <TableHead className="text-right">Participación</TableHead>
                     <TableHead className="min-w-[160px]">Peso relativo</TableHead>

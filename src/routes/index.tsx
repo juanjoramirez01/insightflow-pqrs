@@ -18,6 +18,7 @@ import { DemoNotice } from "@/components/dashboard/PageHeader";
 import { ValueFlow } from "@/components/dashboard/ValueFlow";
 import { PQRS_DATA } from "@/data/pqrs";
 import { contarPor, tendencia, calcularKpis } from "@/lib/pqrs-metrics";
+import { REGIONALES, TIPOS_SERVICIO } from "@/data/pqrs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -161,7 +162,7 @@ function Inicio() {
               <div className="flex items-center justify-between gap-2">
                 <p className="text-xs font-semibold">Vista previa · Análisis de causas</p>
                 <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
-                  Demo
+                  Datos reales
                 </span>
               </div>
               <div className="mt-4 space-y-3">
