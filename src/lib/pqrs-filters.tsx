@@ -7,7 +7,7 @@ export interface Filtros {
   subcausa: string;
   detalle: string;
   tipoServicio: string;
-  prestador: string;
+  analista: string;
   regional: string;
 }
 
@@ -19,7 +19,7 @@ export const FILTROS_INICIALES: Filtros = {
   subcausa: TODOS,
   detalle: TODOS,
   tipoServicio: TODOS,
-  prestador: TODOS,
+  analista: TODOS,
   regional: TODOS,
 };
 
@@ -31,7 +31,7 @@ export function aplicarFiltros(data: PqrsRecord[], f: Filtros): PqrsRecord[] {
       (f.subcausa === TODOS || r.subcausa === f.subcausa) &&
       (f.detalle === TODOS || r.detalle === f.detalle) &&
       (f.tipoServicio === TODOS || r.tipoServicio === f.tipoServicio) &&
-      (f.prestador === TODOS || r.prestador === f.prestador) &&
+      (f.analista === TODOS || r.analista === f.analista) &&
       (f.regional === TODOS || r.regional === f.regional),
   );
 }
