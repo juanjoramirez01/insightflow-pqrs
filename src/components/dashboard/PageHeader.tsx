@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PQRS_DATA, RANGO_FECHAS } from "@/data/pqrs";
 
 export function PageHeader({
   title,
