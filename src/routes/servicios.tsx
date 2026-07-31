@@ -84,7 +84,7 @@ function ServiciosPage() {
           <h2 className="text-lg font-semibold">Homologación de servicios</h2>
           <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
             Un mismo servicio se registra con múltiples redacciones en el CRM. La homologación unifica
-            esas variantes y evita la dispersión de los indicadores por servicio.
+            esas variantes y evita la dispersión de los indicadores por servicio. La tabla muestra las 60 variantes con mayor volumen.
           </p>
           <div className="mt-5 flex flex-col gap-2 lg:flex-row lg:items-center">
             {PASOS.map((p, i) => (
