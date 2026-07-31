@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Plataforma analítica de PQRS: causas raíz, prestadores, regionales y tendencias.",
+          "Plataforma analítica de PQRS: causas raíz, servicios, regionales y tendencias.",
       },
       { property: "og:title", content: "Dashboard de Indicadores PQRS" },
       {

@@ -26,7 +26,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, prestadores homologados, regionales y tendencias.",
+          "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
       },
       { property: "og:title", content: "Dashboard PQRS | Analítica para la mejora continua" },
       {
@@ -42,7 +42,7 @@ function Inicio() {
   const kpis = calcularKpis(PQRS_DATA);
   const causas = contarPor(PQRS_DATA, "causa");
   const regional = contarPor(PQRS_DATA, "regional")[0];
-  const prestador = contarPor(PQRS_DATA, "analista")[0];
+  const analista = contarPor(PQRS_DATA, "analista")[0];
   const servicio = contarPor(PQRS_DATA, "tipoServicio")[0];
   const serie = tendencia(PQRS_DATA);
   const variacion =
@@ -67,9 +67,9 @@ function Inicio() {
     },
     {
       icon: Building2,
-      label: "Prestador con mayor volumen",
-      value: prestador?.name ?? "—",
-      hint: `${prestador?.value ?? 0} PQRS · IPS homologada`,
+      label: "Responsable con mayor carga",
+      value: analista?.name ?? "—",
+      hint: `${analista?.value ?? 0} PQRS asignadas`,
     },
     {
       icon: Stethoscope,
@@ -103,9 +103,9 @@ function Inicio() {
         "Los errores en CUPS y direccionamiento son evitables: reforzar validación previa y capacitación del equipo autorizador.",
     },
     {
-      titulo: "Homologación de prestadores",
+      titulo: "Homologación de servicios",
       texto:
-        "Unificar la nomenclatura de IPS evita dispersión de indicadores y permite rankings confiables por prestador.",
+        "El CRM registra el tipo de servicio con múltiples variantes de texto; homologarlas permite indicadores comparables.",
     },
   ];
 
@@ -145,8 +145,8 @@ function Inicio() {
               {[
                 { k: "PQRS analizadas", v: kpis.total.toLocaleString("es-CO") },
                 { k: "Causas raíz", v: causas.length },
-                { k: "Regionales", v: 6 },
-                { k: "IPS homologadas", v: 9 },
+                { k: "Regionales", v: REGIONALES.length },
+                { k: "Servicios homologados", v: TIPOS_SERVICIO.length },
               ].map((s) => (
                 <div key={s.k} className="min-w-0">
                   <dt className="truncate text-xs text-white/60">{s.k}</dt>
@@ -253,7 +253,7 @@ function Inicio() {
           {[
             { icon: BarChart3, t: "Dashboard PQRS", d: "Indicadores, filtros y gráficos multidimensionales.", to: "/dashboard" as const },
             { icon: LineChart, t: "Análisis de causas", d: "Drill-down Causa → Subcausa → Detalle.", to: "/causas" as const },
-            { icon: Building2, t: "Prestadores", d: "Homologación de IPS y ranking confiable.", to: "/prestadores" as const },
+            { icon: Building2, t: "Servicios", d: "Homologación de servicios y ranking confiable.", to: "/servicios" as const },
           ].map((c) => (
             <Link
               key={c.t}

@@ -14,7 +14,7 @@ export const NAV_ITEMS = [
   { title: "Inicio", url: "/", icon: Home },
   { title: "Dashboard PQRS", url: "/dashboard", icon: BarChart3 },
   { title: "Análisis de causas", url: "/causas", icon: Network },
-  { title: "Prestadores", url: "/prestadores", icon: Building2 },
+  { title: "Servicios", url: "/servicios", icon: Building2 },
   { title: "Regionales", url: "/regionales", icon: Map },
   { title: "Reportes", url: "/reportes", icon: FileText },
 ] as const;
@@ -59,7 +59,7 @@ export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
       </nav>
 
       <div className="border-t border-sidebar-border p-4 text-xs text-sidebar-foreground/60">
-        Datos demostrativos · no corresponden a información real.
+        Datos reales de PQRS · uso interno.
       </div>
     </div>
   );
