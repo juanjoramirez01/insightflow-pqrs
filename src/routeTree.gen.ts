@@ -12,9 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CausasRouteImport } from './routes/causas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as PrestadoresRouteImport } from './routes/prestadores'
 import { Route as RegionalesRouteImport } from './routes/regionales'
 import { Route as ReportesRouteImport } from './routes/reportes'
+import { Route as ServiciosRouteImport } from './routes/servicios'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,11 +31,6 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PrestadoresRoute = PrestadoresRouteImport.update({
-  id: '/prestadores',
-  path: '/prestadores',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RegionalesRoute = RegionalesRouteImport.update({
   id: '/regionales',
   path: '/regionales',
@@ -46,66 +41,61 @@ const ReportesRoute = ReportesRouteImport.update({
   path: '/reportes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServiciosRoute = ServiciosRouteImport.update({
+  id: '/servicios',
+  path: '/servicios',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/prestadores': typeof PrestadoresRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
+  '/servicios': typeof ServiciosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/prestadores': typeof PrestadoresRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
+  '/servicios': typeof ServiciosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/prestadores': typeof PrestadoresRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
+  '/servicios': typeof ServiciosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/causas'
-    | '/dashboard'
-    | '/prestadores'
-    | '/regionales'
-    | '/reportes'
+    '/' | '/causas' | '/dashboard' | '/regionales' | '/reportes' | '/servicios'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/causas'
-    | '/dashboard'
-    | '/prestadores'
-    | '/regionales'
-    | '/reportes'
+    '/' | '/causas' | '/dashboard' | '/regionales' | '/reportes' | '/servicios'
   id:
     | '__root__'
     | '/'
     | '/causas'
     | '/dashboard'
-    | '/prestadores'
     | '/regionales'
     | '/reportes'
+    | '/servicios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CausasRoute: typeof CausasRoute
   DashboardRoute: typeof DashboardRoute
-  PrestadoresRoute: typeof PrestadoresRoute
   RegionalesRoute: typeof RegionalesRoute
   ReportesRoute: typeof ReportesRoute
+  ServiciosRoute: typeof ServiciosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -131,13 +121,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/prestadores': {
-      id: '/prestadores'
-      path: '/prestadores'
-      fullPath: '/prestadores'
-      preLoaderRoute: typeof PrestadoresRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/regionales': {
       id: '/regionales'
       path: '/regionales'
@@ -152,6 +135,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/servicios': {
+      id: '/servicios'
+      path: '/servicios'
+      fullPath: '/servicios'
+      preLoaderRoute: typeof ServiciosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -159,9 +149,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CausasRoute: CausasRoute,
   DashboardRoute: DashboardRoute,
-  PrestadoresRoute: PrestadoresRoute,
   RegionalesRoute: RegionalesRoute,
   ReportesRoute: ReportesRoute,
+  ServiciosRoute: ServiciosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
