@@ -32,7 +32,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Dashboard PQRS | Analítica para la mejora continua" },
       {
         property: "og:description",
-        content: "Convierte los datos de PQRS en decisiones para la mejora continua.",
+        content: "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
       },
     ],
   }),

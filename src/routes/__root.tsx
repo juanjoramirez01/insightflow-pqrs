@@ -80,20 +80,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Dashboard de Indicadores PQRS" },
+      { title: "Dashboard PQRS | Analítica para la mejora continua" },
       {
         name: "description",
         content:
-          "Plataforma analítica de PQRS: causas raíz, servicios, regionales y tendencias.",
+          "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
       },
-      { property: "og:title", content: "Dashboard de Indicadores PQRS" },
+      { property: "og:title", content: "Dashboard PQRS | Analítica para la mejora continua" },
       {
         property: "og:description",
-        content: "Convierte los datos de PQRS en decisiones para la mejora continua.",
+        content: "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Dashboard PQRS | Analítica para la mejora continua" },
+      { name: "twitter:description", content: "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c554d682-f05a-4edd-8524-f2c5c20fa4ed/id-preview-dcdfcfc0--76fced0b-50bd-4fff-b665-8ae4acf1f0c0.lovable.app-1785463868254.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c554d682-f05a-4edd-8524-f2c5c20fa4ed/id-preview-dcdfcfc0--76fced0b-50bd-4fff-b665-8ae4acf1f0c0.lovable.app-1785463868254.png" },
     ],
     links: [
       {
