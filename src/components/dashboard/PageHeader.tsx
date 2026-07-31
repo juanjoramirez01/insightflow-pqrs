@@ -31,7 +31,7 @@ export function DemoNotice() {
   return (
     <p className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-foreground">
       <span className="font-semibold">Fuente:</span> datos reales de PQRS cargados desde el archivo
-      institucional ({TOTAL_PQRS.toLocaleString("es-CO")} casos ·{" "}
+      institucional ({PQRS_DATA.length.toLocaleString("es-CO")} casos ·{" "}
       {RANGO_FECHAS.desde} a {RANGO_FECHAS.hasta}).
     </p>
   );

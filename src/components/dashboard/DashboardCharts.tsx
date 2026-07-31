@@ -23,7 +23,7 @@ const axis = { fontSize: 11, fill: "var(--muted-foreground)" };
 export function DashboardCharts({ data }: { data: PqrsRecord[] }) {
   const porServicio = contarPor(data, "tipoServicio");
   const porRegional = contarPor(data, "regional");
-  const topPrestadores = contarPor(data, "prestador").slice(0, 7);
+  const topPrestadores = contarPor(data, "analista").slice(0, 7);
   const serie = tendencia(data);
   const porCausa = contarPor(data, "causa");
   const totalCausas = porCausa.reduce((a, b) => a + b.value, 0);

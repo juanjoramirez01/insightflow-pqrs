@@ -44,7 +44,7 @@ const PASOS = [
 
 function PrestadoresPage() {
   const { data } = useFiltros();
-  const ranking = contarPor(data, "prestador");
+  const ranking = contarPor(data, "analista");
   const total = data.length;
 
   const metricas = [

@@ -42,7 +42,7 @@ function Inicio() {
   const kpis = calcularKpis(PQRS_DATA);
   const causas = contarPor(PQRS_DATA, "causa");
   const regional = contarPor(PQRS_DATA, "regional")[0];
-  const prestador = contarPor(PQRS_DATA, "prestador")[0];
+  const prestador = contarPor(PQRS_DATA, "analista")[0];
   const servicio = contarPor(PQRS_DATA, "tipoServicio")[0];
   const serie = tendencia(PQRS_DATA);
   const variacion =

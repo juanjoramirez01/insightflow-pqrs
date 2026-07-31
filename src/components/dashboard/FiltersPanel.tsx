@@ -105,10 +105,10 @@ export function FiltersPanel({ jerarquicos = true }: { jerarquicos?: boolean }) 
         />
         <FiltroSelect
           label="Prestador / IPS"
-          value={filtros.prestador}
+          value={filtros.analista}
           todosLabel="Todos los prestadores"
           options={opts(PRESTADORES)}
-          onChange={set("prestador")}
+          onChange={set("analista")}
         />
         {jerarquicos ? (
           <>
