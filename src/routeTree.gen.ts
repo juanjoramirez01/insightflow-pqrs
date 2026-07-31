@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CausasRouteImport } from './routes/causas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as PrestadoresRouteImport } from './routes/prestadores'
+import { Route as RegionalesRouteImport } from './routes/regionales'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,18 +35,25 @@ const PrestadoresRoute = PrestadoresRouteImport.update({
   path: '/prestadores',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegionalesRoute = RegionalesRouteImport.update({
+  id: '/regionales',
+  path: '/regionales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
   '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
   '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,15 @@ export interface FileRoutesById {
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
   '/prestadores': typeof PrestadoresRoute
+  '/regionales': typeof RegionalesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/causas' | '/dashboard' | '/prestadores'
+  fullPaths: '/' | '/causas' | '/dashboard' | '/prestadores' | '/regionales'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/causas' | '/dashboard' | '/prestadores'
-  id: '__root__' | '/' | '/causas' | '/dashboard' | '/prestadores'
+  to: '/' | '/causas' | '/dashboard' | '/prestadores' | '/regionales'
+  id:
+    '__root__' | '/' | '/causas' | '/dashboard' | '/prestadores' | '/regionales'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,6 +77,7 @@ export interface RootRouteChildren {
   CausasRoute: typeof CausasRoute
   DashboardRoute: typeof DashboardRoute
   PrestadoresRoute: typeof PrestadoresRoute
+  RegionalesRoute: typeof RegionalesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -99,6 +110,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrestadoresRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/regionales': {
+      id: '/regionales'
+      path: '/regionales'
+      fullPath: '/regionales'
+      preLoaderRoute: typeof RegionalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -107,6 +125,7 @@ const rootRouteChildren: RootRouteChildren = {
   CausasRoute: CausasRoute,
   DashboardRoute: DashboardRoute,
   PrestadoresRoute: PrestadoresRoute,
+  RegionalesRoute: RegionalesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
