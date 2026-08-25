@@ -17,6 +17,7 @@ export const NAV_ITEMS = [
   { title: "Servicios", url: "/servicios", icon: Building2 },
   { title: "Regionales", url: "/regionales", icon: Map },
   { title: "Reportes", url: "/reportes", icon: FileText },
+  { title: "Migración Zoho", url: "/migracion", icon: CloudDownload },
 ] as const;
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
