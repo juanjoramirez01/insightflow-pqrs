@@ -55,7 +55,7 @@ function MigracionPage() {
       />
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
-        <ChartCard title="Sincronización de casos" subtitle="Los casos existentes se actualizan por su identificador de Zoho.">
+        <ChartCard title="Sincronización de casos" description="Los casos existentes se actualizan por su identificador de Zoho.">
           <div className="flex flex-col gap-4 p-2">
             <p className="text-sm text-muted-foreground">
               La migración recorre el módulo de Casos de Zoho CRM en páginas de 200 registros y
@@ -69,7 +69,7 @@ function MigracionPage() {
           </div>
         </ChartCard>
 
-        <ChartCard title="Resultado" subtitle="Estado de la última ejecución en esta sesión.">
+        <ChartCard title="Resultado" description="Estado de la última ejecución en esta sesión.">
           <div className="flex flex-col gap-3 p-2 text-sm">
             {resultado ? (
               <>
