@@ -14,7 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      pqrs: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          email: string | null
+          first_name: string | null
+          id: number
+          last_name: string | null
+          migrated_at: string | null
+          phone: string | null
+          status: string | null
+          subject: string | null
+          updated_at: string | null
+          zoho_created_time: string | null
+          zoho_id: string
+          zoho_modified_time: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: number
+          last_name?: string | null
+          migrated_at?: string | null
+          phone?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string | null
+          zoho_created_time?: string | null
+          zoho_id: string
+          zoho_modified_time?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: number
+          last_name?: string | null
+          migrated_at?: string | null
+          phone?: string | null
+          status?: string | null
+          subject?: string | null
+          updated_at?: string | null
+          zoho_created_time?: string | null
+          zoho_id?: string
+          zoho_modified_time?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
