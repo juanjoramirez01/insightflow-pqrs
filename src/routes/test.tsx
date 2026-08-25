@@ -7,4 +7,5 @@ export const Route = createFileRoute('/test')({
       headers: { 'Content-Type': 'text/plain' },
     });
   },
+  component: () => null,
 });
