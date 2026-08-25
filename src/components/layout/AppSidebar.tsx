@@ -3,6 +3,7 @@ import {
   Activity,
   BarChart3,
   Building2,
+  CloudDownload,
   FileText,
   Home,
   Map,
