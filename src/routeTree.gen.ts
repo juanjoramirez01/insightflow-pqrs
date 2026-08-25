@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CausasRouteImport } from './routes/causas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as MigracionRouteImport } from './routes/migracion'
 import { Route as RegionalesRouteImport } from './routes/regionales'
 import { Route as ReportesRouteImport } from './routes/reportes'
 import { Route as ServiciosRouteImport } from './routes/servicios'
@@ -29,6 +30,11 @@ const CausasRoute = CausasRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MigracionRoute = MigracionRouteImport.update({
+  id: '/migracion',
+  path: '/migracion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegionalesRoute = RegionalesRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
+  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
+  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
+  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
@@ -75,15 +84,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/causas' | '/dashboard' | '/regionales' | '/reportes' | '/servicios'
+    | '/'
+    | '/causas'
+    | '/dashboard'
+    | '/migracion'
+    | '/regionales'
+    | '/reportes'
+    | '/servicios'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/causas' | '/dashboard' | '/regionales' | '/reportes' | '/servicios'
+    | '/'
+    | '/causas'
+    | '/dashboard'
+    | '/migracion'
+    | '/regionales'
+    | '/reportes'
+    | '/servicios'
   id:
     | '__root__'
     | '/'
     | '/causas'
     | '/dashboard'
+    | '/migracion'
     | '/regionales'
     | '/reportes'
     | '/servicios'
@@ -93,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CausasRoute: typeof CausasRoute
   DashboardRoute: typeof DashboardRoute
+  MigracionRoute: typeof MigracionRoute
   RegionalesRoute: typeof RegionalesRoute
   ReportesRoute: typeof ReportesRoute
   ServiciosRoute: typeof ServiciosRoute
@@ -119,6 +142,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/migracion': {
+      id: '/migracion'
+      path: '/migracion'
+      fullPath: '/migracion'
+      preLoaderRoute: typeof MigracionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/regionales': {
@@ -149,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CausasRoute: CausasRoute,
   DashboardRoute: DashboardRoute,
+  MigracionRoute: MigracionRoute,
   RegionalesRoute: RegionalesRoute,
   ReportesRoute: ReportesRoute,
   ServiciosRoute: ServiciosRoute,
