@@ -42,7 +42,7 @@ async function fetchPage(page: number, lovableKey: string, zohoKey: string) {
 }
 
 /** Migra los casos (PQRS) de Zoho CRM a la tabla `pqrs` de la base de datos. */
-export const migrarPqrsDesdeZoho = createServerFn({ method: "POST" }).handler(async () => {
+export const migrarPqrsDesdeZoho = createServerFn({ method: "GET" }).handler(async () => {
   const lovableKey = process.env["LOVABLE_API_KEY"];
   const zohoKey = process.env["ZOHO_CRM_API_KEY"];
   if (!lovableKey || !zohoKey) {

@@ -1,33 +1,28 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { migrarPqrsDesdeZoho } from '../../server/zoho-migration.functions';
+import { migrarPqrsDesdeZoho } from '@/lib/zoho-migration.functions';
 
 export const Route = createFileRoute('/api/migrate-zoho')({
-  loader: async () => {
-    try {
-      const resultado = await migrarPqrsDesdeZoho();
-      
-      return new Response(
-        JSON.stringify({ 
-          exito: true, 
-          migrados: resultado.migrados, 
-          totalEnBase: resultado.totalEnBase 
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
+  server: {
+    handlers: {
+      GET: async () => {
+        try {
+          const resultado = await migrarPqrsDesdeZoho();
+
+          return Response.json({
+            exito: true,
+            migrados: resultado.migrados,
+            totalEnBase: resultado.totalEnBase,
+          });
+        } catch (error) {
+          return Response.json(
+            {
+              exito: false,
+              error: error instanceof Error ? error.message : 'Error desconocido',
+            },
+            { status: 500 }
+          );
         }
-      );
-    } catch (error) {
-      return new Response(
-        JSON.stringify({ 
-          exito: false, 
-          error: (error as Error).message 
-        }),
-        {
-          status: 500,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
+      },
+    },
   },
 });
