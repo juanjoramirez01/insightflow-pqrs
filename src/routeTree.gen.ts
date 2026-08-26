@@ -17,6 +17,7 @@ import { Route as RegionalesRouteImport } from './routes/regionales'
 import { Route as ReportesRouteImport } from './routes/reportes'
 import { Route as ServiciosRouteImport } from './routes/servicios'
 import { Route as ApiMigrateZohoRouteImport } from './routes/api.migrate-zoho'
+import { Route as ApiPublicMigrateZohoRouteImport } from './routes/api/public/migrate-zoho'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const ApiMigrateZohoRoute = ApiMigrateZohoRouteImport.update({
   path: '/api/migrate-zoho',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMigrateZohoRoute = ApiPublicMigrateZohoRouteImport.update({
+  id: '/api/public/migrate-zoho',
+  path: '/api/public/migrate-zoho',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
   '/api/migrate-zoho': typeof ApiMigrateZohoRoute
+  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
   '/api/migrate-zoho': typeof ApiMigrateZohoRoute
+  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
   '/api/migrate-zoho': typeof ApiMigrateZohoRoute
+  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/reportes'
     | '/servicios'
     | '/api/migrate-zoho'
+    | '/api/public/migrate-zoho'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/reportes'
     | '/servicios'
     | '/api/migrate-zoho'
+    | '/api/public/migrate-zoho'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/reportes'
     | '/servicios'
     | '/api/migrate-zoho'
+    | '/api/public/migrate-zoho'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   ReportesRoute: typeof ReportesRoute
   ServiciosRoute: typeof ServiciosRoute
   ApiMigrateZohoRoute: typeof ApiMigrateZohoRoute
+  ApiPublicMigrateZohoRoute: typeof ApiPublicMigrateZohoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMigrateZohoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/migrate-zoho': {
+      id: '/api/public/migrate-zoho'
+      path: '/api/public/migrate-zoho'
+      fullPath: '/api/public/migrate-zoho'
+      preLoaderRoute: typeof ApiPublicMigrateZohoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReportesRoute: ReportesRoute,
   ServiciosRoute: ServiciosRoute,
   ApiMigrateZohoRoute: ApiMigrateZohoRoute,
+  ApiPublicMigrateZohoRoute: ApiPublicMigrateZohoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
