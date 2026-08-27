@@ -16,7 +16,7 @@ type ZohoCase = {
 };
 
 async function fetchPage(pageToken: string | null, lovableKey: string, zohoKey: string) {
-  const params = new URLSearchParams({ fields: FIELDS, per_page: "200" });
+  const params = new URLSearchParams({ per_page: "200" });
   if (pageToken) params.set("page_token", pageToken);
 
   const response = await fetch(`${GATEWAY_URL}/PQRS?${params.toString()}`, {
