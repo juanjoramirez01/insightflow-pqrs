@@ -16,7 +16,7 @@ type ZohoCase = {
 };
 
 async function fetchPage(page: number, lovableKey: string, zohoKey: string) {
-  const url = `${GATEWAY_URL}/Cases?fields=${encodeURIComponent(FIELDS)}&per_page=200&page=${page}`;
+  const url = `${GATEWAY_URL}/PQRS?fields=${encodeURIComponent(FIELDS)}&per_page=200&page=${page}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
