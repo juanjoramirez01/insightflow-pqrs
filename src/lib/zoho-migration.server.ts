@@ -116,7 +116,7 @@ export async function runZohoMigration() {
     if (error) throw new Error(`Error guardando en la base de datos: ${error.message}`);
 
     total += rows.length;
-  } while (pageToken && pages <= 500);
+  } while (pageToken && pages <= 1);
 
   const { count } = await supabaseAdmin.from("pqrs").select("id", { count: "exact", head: true });
 
