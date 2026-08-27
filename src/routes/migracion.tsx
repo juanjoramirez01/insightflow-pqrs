@@ -58,7 +58,7 @@ function MigracionPage() {
         <ChartCard title="Sincronización de casos" description="Los casos existentes se actualizan por su identificador de Zoho.">
           <div className="flex flex-col gap-4 p-2">
             <p className="text-sm text-muted-foreground">
-              La migración recorre el módulo de Casos de Zoho CRM en páginas de 200 registros y
+              La migración recorre el módulo PQRS de Zoho CRM en páginas de 200 registros y
               guarda nombre, contacto, asunto, descripción, estado y fechas de creación y
               modificación.
             </p>
