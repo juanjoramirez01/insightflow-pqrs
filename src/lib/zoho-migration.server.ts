@@ -15,9 +15,11 @@ type ZohoCase = {
   Modified_Time?: string | null;
 };
 
-async function fetchPage(page: number, lovableKey: string, zohoKey: string) {
-  const url = `${GATEWAY_URL}/PQRS?fields=${encodeURIComponent(FIELDS)}&per_page=200&page=${page}`;
-  const response = await fetch(url, {
+async function fetchPage(pageToken: string | null, lovableKey: string, zohoKey: string) {
+  const params = new URLSearchParams({ fields: FIELDS, per_page: "200" });
+  if (pageToken) params.set("page_token", pageToken);
+
+  const response = await fetch(`${GATEWAY_URL}/PQRS?${params.toString()}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${lovableKey}`,
@@ -25,7 +27,7 @@ async function fetchPage(page: number, lovableKey: string, zohoKey: string) {
     },
   });
 
-  if (response.status === 204) return { data: [] as ZohoCase[], more: false };
+  if (response.status === 204) return { data: [] as ZohoCase[], nextToken: null as string | null };
 
   if (!response.ok) {
     const body = await response.text();
@@ -35,12 +37,16 @@ async function fetchPage(page: number, lovableKey: string, zohoKey: string) {
 
   const json = (await response.json()) as {
     data?: ZohoCase[];
-    info?: { more_records?: boolean };
+    info?: { more_records?: boolean; next_page_token?: string };
   };
-  return { data: json.data ?? [], more: Boolean(json.info?.more_records) };
+  const more = Boolean(json.info?.more_records);
+  return {
+    data: json.data ?? [],
+    nextToken: more ? (json.info?.next_page_token ?? null) : null,
+  };
 }
 
-/** Trae los casos de Zoho CRM y los guarda/actualiza en la tabla `pqrs`. */
+/** Trae los registros del módulo PQRS de Zoho CRM y los guarda/actualiza en la tabla `pqrs`. */
 export async function runZohoMigration() {
   const lovableKey = process.env["LOVABLE_API_KEY"];
   const zohoKey = process.env["ZOHO_CRM_API_KEY"];
@@ -50,12 +56,14 @@ export async function runZohoMigration() {
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-  let page = 1;
-  let more = true;
+  let pageToken: string | null = null;
+  let pages = 0;
   let total = 0;
 
-  while (more && page <= 50) {
-    const { data, more: hasMore } = await fetchPage(page, lovableKey, zohoKey);
+  do {
+    const { data, nextToken } = await fetchPage(pageToken, lovableKey, zohoKey);
+    pageToken = nextToken;
+    pages += 1;
     if (data.length === 0) break;
 
     const rows = data.map((c) => ({
@@ -76,9 +84,7 @@ export async function runZohoMigration() {
     if (error) throw new Error(`Error guardando en la base de datos: ${error.message}`);
 
     total += rows.length;
-    more = hasMore;
-    page += 1;
-  }
+  } while (pageToken && pages <= 500);
 
   const { count } = await supabaseAdmin.from("pqrs").select("id", { count: "exact", head: true });
 
