@@ -1,19 +1,44 @@
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/zoho_crm";
-const FIELDS =
-  "First_Name,Last_Name,Email,Phone,Subject,Description,Status,Created_Time,Modified_Time";
+// Campos reales del módulo PQRS (obtenidos de settings/fields)
+const FIELDS = [
+  "Name",
+  "N_mero_del_caso",
+  "Estado",
+  "Causa",
+  "Motivos",
+  "Tipo_de_caso",
+  "Descripci_n",
+  "Nombre_del_contacto",
+  "Regional_EPS",
+  "Tipo_Servicio",
+  "Detalle_Operativo",
+  "Prioridad",
+  "Fecha_de_apertura_PQR",
+  "Fecha_de_cierre",
+  "Created_Time",
+  "Modified_Time",
+].join(",");
+
+type ZohoLookup = { name?: string | null } | string | null | undefined;
 
 type ZohoCase = {
   id: string;
-  First_Name?: string | null;
-  Last_Name?: string | null;
-  Email?: string | null;
-  Phone?: string | null;
-  Subject?: string | null;
-  Description?: string | null;
-  Status?: string | null;
+  Name?: string | null;
+  N_mero_del_caso?: string | null;
+  Estado?: string | null;
+  Causa?: string | null;
+  Descripci_n?: string | null;
+  Nombre_del_contacto?: ZohoLookup;
+  Tipo_Servicio?: string | null;
   Created_Time?: string | null;
   Modified_Time?: string | null;
 };
+
+function lookupName(value: ZohoLookup): string | null {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  return value.name ?? null;
+}
 
 async function fetchPage(pageToken: string | null, lovableKey: string, zohoKey: string) {
   const params = new URLSearchParams({ per_page: "200" });
