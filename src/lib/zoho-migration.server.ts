@@ -40,9 +40,16 @@ function lookupName(value: ZohoLookup): string | null {
   return value.name ?? null;
 }
 
+function ms(start: number) {
+  return `${Math.round(performance.now() - start)}ms`;
+}
+
 async function fetchPage(pageToken: string | null, lovableKey: string, zohoKey: string) {
   const params = new URLSearchParams({ fields: FIELDS, per_page: "200" });
   if (pageToken) params.set("page_token", pageToken);
+
+  const t0 = performance.now();
+  console.log(`[zoho] fetchPage -> solicitando (page_token=${pageToken ?? "inicial"})`);
 
   const response = await fetch(`${GATEWAY_URL}/PQRS?${params.toString()}`, {
     method: "GET",
