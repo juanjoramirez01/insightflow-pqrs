@@ -43,10 +43,7 @@ function ReportesPage() {
   const [pagina, setPagina] = useState(0);
   const totalPaginas = Math.max(1, Math.ceil(data.length / PAGE));
   const pageIdx = Math.min(pagina, totalPaginas - 1);
-  const filas = useMemo(
-    () => data.slice(pageIdx * PAGE, pageIdx * PAGE + PAGE),
-    [data, pageIdx],
-  );
+  const filas = useMemo(() => data.slice(pageIdx * PAGE, pageIdx * PAGE + PAGE), [data, pageIdx]);
 
   const exportar = () => {
     const headers = [
@@ -55,20 +52,22 @@ function ReportesPage() {
       "causa",
       "subcausa",
       "detalle",
+      "descripcion",
       "tipoServicio",
       "servicioRaw",
+      "servicioEspecifico",
+      "medioRecepcion",
       "analista",
       "prioridad",
       "tipoCaso",
       "regional",
       "estado",
       "tiempoGestion",
+      "edad",
     ];
     const csv = [
       headers.join(","),
-      ...data.map((r) =>
-        headers.map((h) => `"${String(r[h as keyof typeof r] ?? "")}"`).join(","),
-      ),
+      ...data.map((r) => headers.map((h) => `"${String(r[h as keyof typeof r] ?? "")}"`).join(",")),
     ].join("\n");
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
     const a = document.createElement("a");
@@ -123,22 +122,39 @@ function ReportesPage() {
                       <TableHead>Causa</TableHead>
                       <TableHead>Subcausa</TableHead>
                       <TableHead>Detalle</TableHead>
+                      <TableHead>Descripción</TableHead>
                       <TableHead>Servicio</TableHead>
+                      <TableHead>Servicio específico</TableHead>
+                      <TableHead>Medio de recepción</TableHead>
                       <TableHead>Responsable</TableHead>
                       <TableHead>Regional</TableHead>
                       <TableHead>Estado</TableHead>
                       <TableHead className="text-right">Días</TableHead>
+                      <TableHead className="text-right">Edad</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filas.map((r) => (
                       <TableRow key={r.id}>
-                        <TableCell className="whitespace-nowrap font-mono text-xs">{r.id}</TableCell>
+                        <TableCell className="whitespace-nowrap font-mono text-xs">
+                          {r.id}
+                        </TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.fecha}</TableCell>
                         <TableCell className="max-w-[230px] truncate text-xs">{r.causa}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.subcausa}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.detalle}</TableCell>
-                        <TableCell className="whitespace-nowrap text-xs">{r.tipoServicio}</TableCell>
+                        <TableCell className="max-w-[260px] truncate text-xs" title={r.descripcion}>
+                          {r.descripcion || "—"}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-xs">
+                          {r.tipoServicio}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-xs">
+                          {r.servicioEspecifico || "—"}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap text-xs">
+                          {r.medioRecepcion}
+                        </TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.analista}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.regional}</TableCell>
                         <TableCell>
@@ -147,6 +163,7 @@ function ReportesPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right text-xs">{r.tiempoGestion}</TableCell>
+                        <TableCell className="text-right text-xs">{r.edad ?? "—"}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

@@ -15,7 +15,6 @@ import { ChartCard, EmptyState } from "@/components/dashboard/ChartCard";
 import { TooltipBox } from "@/components/charts/ChartTooltip";
 import { useFiltros } from "@/lib/pqrs-filters";
 import { CHART_COLORS, contarPor } from "@/lib/pqrs-metrics";
-import { REGIONALES } from "@/data/pqrs";
 
 export const Route = createFileRoute("/regionales")({
   head: () => ({
@@ -37,20 +36,28 @@ export const Route = createFileRoute("/regionales")({
 });
 
 function RegionalesPage() {
-  const { data } = useFiltros();
+  const { data, regionales } = useFiltros();
   const conteo = contarPor(data, "regional");
   const total = data.length;
 
-  const detalle = REGIONALES.map((reg) => {
-    const rows = data.filter((r) => r.regional === reg);
-    const causa = contarPor(rows, "causa")[0];
-    const servicio = contarPor(rows, "tipoServicio")[0];
-    const tiempo = rows.length
-      ? Math.round((rows.reduce((a, r) => a + r.tiempoGestion, 0) / rows.length) * 10) / 10
-      : 0;
-    const abiertas = rows.filter((r) => r.estado !== "Cerrada").length;
-    return { reg, total: rows.length, causa: causa?.name ?? "—", servicio: servicio?.name ?? "—", tiempo, abiertas };
-  })
+  const detalle = regionales
+    .map((reg) => {
+      const rows = data.filter((r) => r.regional === reg);
+      const causa = contarPor(rows, "causa")[0];
+      const servicio = contarPor(rows, "tipoServicio")[0];
+      const tiempo = rows.length
+        ? Math.round((rows.reduce((a, r) => a + r.tiempoGestion, 0) / rows.length) * 10) / 10
+        : 0;
+      const abiertas = rows.filter((r) => r.estado !== "Cerrada").length;
+      return {
+        reg,
+        total: rows.length,
+        causa: causa?.name ?? "—",
+        servicio: servicio?.name ?? "—",
+        tiempo,
+        abiertas,
+      };
+    })
     .filter((r) => r.total > 0)
     .sort((a, b) => b.total - a.total);
 
@@ -72,7 +79,10 @@ function RegionalesPage() {
           <EmptyState mensaje="Ninguna PQRS coincide con la combinación de filtros seleccionada." />
         ) : (
           <>
-            <ChartCard title="PQRS por regional" description="Volumen total según los filtros aplicados">
+            <ChartCard
+              title="PQRS por regional"
+              description="Volumen total según los filtros aplicados"
+            >
               <div className="h-[320px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={conteo} margin={{ top: 8, right: 12, left: -18, bottom: 8 }}>
@@ -101,7 +111,10 @@ function RegionalesPage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {detalle.map((d) => (
-                <div key={d.reg} className="rounded-xl border border-border bg-card p-5 shadow-card">
+                <div
+                  key={d.reg}
+                  className="rounded-xl border border-border bg-card p-5 shadow-card"
+                >
                   <div className="flex items-baseline justify-between gap-3">
                     <h3 className="min-w-0 truncate text-sm font-semibold">{d.reg}</h3>
                     <span className="shrink-0 text-lg font-semibold">{d.total}</span>

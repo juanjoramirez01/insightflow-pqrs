@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard PQRS · Widget Zoho CRM</title>
+    <style>
+      html,
+      body,
+      iframe {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      Reemplaza TU-DOMINIO-DE-DESPLIEGUE por el dominio real donde quedó publicado
+      este proyecto (el de Lovable Cloud, p.ej. https://xxxxx.lovable.app, o tu
+      propio dominio si luego lo mueves a Vercel). No inventes una URL definitiva.
+    -->
+    <iframe src="https://TU-DOMINIO-DE-DESPLIEGUE/dashboard" title="Dashboard PQRS"></iframe>
+
+    <!--
+      Opcional: SDK de Widgets de Zoho CRM. Solo hace falta si instalas esto como
+      "Custom Widget" (no como "Web Tab") y quieres que el widget conozca el
+      registro/módulo actual desde el que se abrió. Verifica la versión vigente
+      en la documentación de Zoho antes de confiar en esta URL en producción.
+    -->
+    <script src="https://live.zwidgets.com/js-sdk/1.2/ZohoEmbededAppSDK.min.js"></script>
+    <script>
+      if (window.ZOHO && ZOHO.embeddedApp) {
+        ZOHO.embeddedApp.init();
+      }
+    </script>
+  </body>
+</html>

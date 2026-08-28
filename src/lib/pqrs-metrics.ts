@@ -1,4 +1,4 @@
-import { MESES_ES, PQRS_DATA, type PqrsRecord } from "@/data/pqrs";
+import { MESES_ES, type PqrsRecord } from "@/data/pqrs";
 
 export interface Conteo {
   name: string;
@@ -56,9 +56,9 @@ function resumen(data: PqrsRecord[]) {
 }
 
 /** Compara el ultimo periodo presente contra el anterior dentro del set filtrado. */
-export function calcularKpis(data: PqrsRecord[]): Kpis {
+export function calcularKpis(data: PqrsRecord[], todosLosPeriodos: string[]): Kpis {
   const actualTotal = resumen(data);
-  const periodos = [...new Set(PQRS_DATA.map((r) => r.periodo))].sort();
+  const periodos = [...todosLosPeriodos].sort();
   const presentes = [...new Set(data.map((r) => r.periodo))].sort();
   const ultimo = presentes[presentes.length - 1];
   const idx = periodos.indexOf(ultimo);

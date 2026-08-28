@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { HOMOLOGACION, HOMOLOGACION_METRICAS } from "@/data/pqrs";
 import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor } from "@/lib/pqrs-metrics";
 
@@ -27,7 +26,8 @@ export const Route = createFileRoute("/servicios")({
       { property: "og:title", content: "Servicios y homologación | Dashboard PQRS" },
       {
         property: "og:description",
-        content: "Unificación de nomenclatura de servicios y ranking de PQRS por servicio homologado.",
+        content:
+          "Unificación de nomenclatura de servicios y ranking de PQRS por servicio homologado.",
       },
     ],
   }),
@@ -43,15 +43,19 @@ const PASOS = [
 ];
 
 function ServiciosPage() {
-  const { data } = useFiltros();
+  const { data, homologacion, homologacionMetricas } = useFiltros();
   const ranking = contarPor(data, "tipoServicio");
   const total = data.length;
 
   const metricas = [
-    { icon: Building2, label: "Variantes de servicio en el CRM", value: HOMOLOGACION_METRICAS.registrosCrm },
-    { icon: Copy, label: "Variantes consolidadas", value: HOMOLOGACION_METRICAS.duplicados },
-    { icon: GitMerge, label: "Servicios homologados", value: HOMOLOGACION_METRICAS.homologados },
-    { icon: ShieldCheck, label: "% de homologación", value: `${HOMOLOGACION_METRICAS.porcentaje}%` },
+    {
+      icon: Building2,
+      label: "Variantes de servicio en el CRM",
+      value: homologacionMetricas.registrosCrm,
+    },
+    { icon: Copy, label: "Variantes consolidadas", value: homologacionMetricas.duplicados },
+    { icon: GitMerge, label: "Servicios homologados", value: homologacionMetricas.homologados },
+    { icon: ShieldCheck, label: "% de homologación", value: `${homologacionMetricas.porcentaje}%` },
   ];
 
   return (
@@ -83,8 +87,9 @@ function ServiciosPage() {
         <section className="rounded-xl border border-border bg-card p-5 shadow-card">
           <h2 className="text-lg font-semibold">Homologación de servicios</h2>
           <p className="mt-1 max-w-3xl text-sm text-muted-foreground">
-            Un mismo servicio se registra con múltiples redacciones en el CRM. La homologación unifica
-            esas variantes y evita la dispersión de los indicadores por servicio. La tabla muestra las 60 variantes con mayor volumen.
+            Un mismo servicio se registra con múltiples redacciones en el CRM. La homologación
+            unifica esas variantes y evita la dispersión de los indicadores por servicio. La tabla
+            muestra las 60 variantes con mayor volumen.
           </p>
           <div className="mt-5 flex flex-col gap-2 lg:flex-row lg:items-center">
             {PASOS.map((p, i) => (
@@ -109,13 +114,15 @@ function ServiciosPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {HOMOLOGACION.slice(0, 60).map((h) => (
+                {homologacion.slice(0, 60).map((h) => (
                   <TableRow key={h.crm}>
                     <TableCell className="whitespace-nowrap font-mono text-xs text-muted-foreground">
                       {h.crm}
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-sm font-medium">{h.ips}</TableCell>
-                    <TableCell className="text-right text-xs text-muted-foreground">{h.casos}</TableCell>
+                    <TableCell className="text-right text-xs text-muted-foreground">
+                      {h.casos}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -145,7 +152,9 @@ function ServiciosPage() {
                   {ranking.map((r, i) => (
                     <TableRow key={r.name}>
                       <TableCell className="text-xs text-muted-foreground">{i + 1}</TableCell>
-                      <TableCell className="whitespace-nowrap text-sm font-medium">{r.name}</TableCell>
+                      <TableCell className="whitespace-nowrap text-sm font-medium">
+                        {r.name}
+                      </TableCell>
                       <TableCell className="text-right text-sm font-semibold">{r.value}</TableCell>
                       <TableCell className="text-right text-sm text-muted-foreground">
                         {((r.value / total) * 100).toFixed(1)}%

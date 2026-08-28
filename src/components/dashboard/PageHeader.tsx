@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { PQRS_DATA, RANGO_FECHAS } from "@/data/pqrs";
+import { useFiltros } from "@/lib/pqrs-filters";
 
 export function PageHeader({
   title,
@@ -28,11 +28,12 @@ export function PageHeader({
 }
 
 export function DemoNotice() {
+  const { todos, rangoFechas, actualizadoEn } = useFiltros();
   return (
     <p className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-xs text-foreground">
-      <span className="font-semibold">Fuente:</span> datos reales de PQRS cargados desde el archivo
-      institucional ({PQRS_DATA.length.toLocaleString("es-CO")} casos ·{" "}
-      {RANGO_FECHAS.desde} a {RANGO_FECHAS.hasta}).
+      <span className="font-semibold">Fuente:</span> datos en vivo de PQRS desde Zoho CRM (
+      {todos.length.toLocaleString("es-CO")} casos · {rangoFechas.desde} a {rangoFechas.hasta}).
+      {actualizadoEn ? <> Actualizado: {new Date(actualizadoEn).toLocaleString("es-CO")}.</> : null}
     </p>
   );
 }

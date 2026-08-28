@@ -1,14 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import {
-  Activity,
-  BarChart3,
-  Building2,
-  CloudDownload,
-  FileText,
-  Home,
-  Map,
-  Network,
-} from "lucide-react";
+import { Activity, BarChart3, Building2, FileText, Home, Map, Network } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const NAV_ITEMS = [
@@ -18,7 +9,6 @@ export const NAV_ITEMS = [
   { title: "Servicios", url: "/servicios", icon: Building2 },
   { title: "Regionales", url: "/regionales", icon: Map },
   { title: "Reportes", url: "/reportes", icon: FileText },
-  { title: "Migración Zoho", url: "/migracion", icon: CloudDownload },
 ] as const;
 
 export function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {

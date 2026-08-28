@@ -5,7 +5,6 @@ import { DrilldownCausas } from "@/components/dashboard/DrilldownCausas";
 import { ChartCard, EmptyState } from "@/components/dashboard/ChartCard";
 import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor } from "@/lib/pqrs-metrics";
-import { TAXONOMIA } from "@/data/pqrs";
 
 export const Route = createFileRoute("/causas")({
   head: () => ({
@@ -27,7 +26,7 @@ export const Route = createFileRoute("/causas")({
 });
 
 function CausasPage() {
-  const { data } = useFiltros();
+  const { data, taxonomia } = useFiltros();
   const porDetalle = contarPor(data, "detalle").slice(0, 10);
   const total = data.length;
 
@@ -76,7 +75,7 @@ function CausasPage() {
                 description="Árbol de causas, subcausas y detalles válidos. Nunca se permiten combinaciones inválidas."
               >
                 <div className="max-h-[420px] space-y-4 overflow-y-auto pr-1">
-                  {Object.entries(TAXONOMIA).map(([causa, subs]) => (
+                  {Object.entries(taxonomia).map(([causa, subs]) => (
                     <div key={causa}>
                       <p className="text-sm font-semibold text-foreground">{causa}</p>
                       <ul className="mt-2 space-y-2 border-l border-border pl-3">

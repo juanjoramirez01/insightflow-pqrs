@@ -8,16 +8,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  PERIODOS,
-  ANALISTAS,
-  REGIONALES,
-  TIPOS_SERVICIO,
-  CAUSAS,
-  detallesDe,
-  etiquetaPeriodo,
-  subcausasDe,
-} from "@/data/pqrs";
+import { etiquetaPeriodo } from "@/data/pqrs";
 import { TODOS, useFiltros, type Filtros } from "@/lib/pqrs-filters";
 
 function FiltroSelect({
@@ -58,7 +49,19 @@ function FiltroSelect({
 const opts = (arr: string[]) => arr.map((v) => ({ value: v, label: v }));
 
 export function FiltersPanel({ jerarquicos = true }: { jerarquicos?: boolean }) {
-  const { filtros, setFiltro, limpiar, activos } = useFiltros();
+  const {
+    filtros,
+    setFiltro,
+    limpiar,
+    activos,
+    periodos,
+    analistas,
+    regionales,
+    tiposServicio,
+    causas,
+    subcausasDe,
+    detallesDe,
+  } = useFiltros();
   const set = (k: keyof Filtros) => (v: string) => setFiltro(k, v);
   const causaSel = filtros.causa === TODOS ? null : filtros.causa;
   const subSel = filtros.subcausa === TODOS ? null : filtros.subcausa;
@@ -86,28 +89,28 @@ export function FiltersPanel({ jerarquicos = true }: { jerarquicos?: boolean }) 
           label="Periodo"
           value={filtros.periodo}
           todosLabel="Últimos 12 meses"
-          options={PERIODOS.map((p) => ({ value: p, label: etiquetaPeriodo(p) }))}
+          options={periodos.map((p) => ({ value: p, label: etiquetaPeriodo(p) }))}
           onChange={set("periodo")}
         />
         <FiltroSelect
           label="Regional"
           value={filtros.regional}
           todosLabel="Todas las regionales"
-          options={opts(REGIONALES)}
+          options={opts(regionales)}
           onChange={set("regional")}
         />
         <FiltroSelect
           label="Tipo de servicio"
           value={filtros.tipoServicio}
           todosLabel="Todos los servicios"
-          options={opts(TIPOS_SERVICIO)}
+          options={opts(tiposServicio)}
           onChange={set("tipoServicio")}
         />
         <FiltroSelect
           label="Responsable de gestión"
           value={filtros.analista}
           todosLabel="Todos los responsables"
-          options={opts(ANALISTAS)}
+          options={opts(analistas)}
           onChange={set("analista")}
         />
         {jerarquicos ? (
@@ -116,7 +119,7 @@ export function FiltersPanel({ jerarquicos = true }: { jerarquicos?: boolean }) 
               label="Causa principal"
               value={filtros.causa}
               todosLabel="Todas las causas"
-              options={opts(CAUSAS)}
+              options={opts(causas)}
               onChange={set("causa")}
             />
             <FiltroSelect

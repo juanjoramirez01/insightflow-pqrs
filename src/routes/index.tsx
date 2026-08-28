@@ -16,9 +16,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { DemoNotice } from "@/components/dashboard/PageHeader";
 import { ValueFlow } from "@/components/dashboard/ValueFlow";
-import { PQRS_DATA } from "@/data/pqrs";
+import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor, tendencia, calcularKpis } from "@/lib/pqrs-metrics";
-import { REGIONALES, TIPOS_SERVICIO } from "@/data/pqrs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,7 +31,8 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Dashboard PQRS | Analítica para la mejora continua" },
       {
         property: "og:description",
-        content: "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
+        content:
+          "Portada ejecutiva del Dashboard de Indicadores PQRS: causas raíz, servicios, regionales y tendencias.",
       },
     ],
   }),
@@ -40,17 +40,16 @@ export const Route = createFileRoute("/")({
 });
 
 function Inicio() {
-  const kpis = calcularKpis(PQRS_DATA);
-  const causas = contarPor(PQRS_DATA, "causa");
-  const regional = contarPor(PQRS_DATA, "regional")[0];
-  const analista = contarPor(PQRS_DATA, "analista")[0];
-  const servicio = contarPor(PQRS_DATA, "tipoServicio")[0];
-  const serie = tendencia(PQRS_DATA);
+  const { todos, regionales, tiposServicio, periodos } = useFiltros();
+  const kpis = calcularKpis(todos, periodos);
+  const causas = contarPor(todos, "causa");
+  const regional = contarPor(todos, "regional")[0];
+  const analista = contarPor(todos, "analista")[0];
+  const servicio = contarPor(todos, "tipoServicio")[0];
+  const serie = tendencia(todos);
   const variacion =
     serie.length > 1
-      ? Math.round(
-          ((serie[serie.length - 1].value - serie[0].value) / serie[0].value) * 1000,
-        ) / 10
+      ? Math.round(((serie[serie.length - 1].value - serie[0].value) / serie[0].value) * 1000) / 10
       : 0;
 
   const resumen = [
@@ -58,7 +57,7 @@ function Inicio() {
       icon: Layers,
       label: "Principal causa",
       value: causas[0]?.name ?? "—",
-      hint: `${causas[0]?.value ?? 0} PQRS · ${Math.round(((causas[0]?.value ?? 0) / PQRS_DATA.length) * 100)}% del total`,
+      hint: `${causas[0]?.value ?? 0} PQRS · ${Math.round(((causas[0]?.value ?? 0) / todos.length) * 100)}% del total`,
     },
     {
       icon: Map,
@@ -146,8 +145,8 @@ function Inicio() {
               {[
                 { k: "PQRS analizadas", v: kpis.total.toLocaleString("es-CO") },
                 { k: "Causas raíz", v: causas.length },
-                { k: "Regionales", v: REGIONALES.length },
-                { k: "Servicios homologados", v: TIPOS_SERVICIO.length },
+                { k: "Regionales", v: regionales.length },
+                { k: "Servicios homologados", v: tiposServicio.length },
               ].map((s) => (
                 <div key={s.k} className="min-w-0">
                   <dt className="truncate text-xs text-white/60">{s.k}</dt>
@@ -240,7 +239,10 @@ function Inicio() {
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
             {oportunidades.map((o) => (
-              <div key={o.titulo} className="rounded-xl border border-border bg-card p-5 shadow-card">
+              <div
+                key={o.titulo}
+                className="rounded-xl border border-border bg-card p-5 shadow-card"
+              >
                 <p className="text-sm font-semibold">{o.titulo}</p>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{o.texto}</p>
               </div>
@@ -252,9 +254,24 @@ function Inicio() {
 
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {[
-            { icon: BarChart3, t: "Dashboard PQRS", d: "Indicadores, filtros y gráficos multidimensionales.", to: "/dashboard" as const },
-            { icon: LineChart, t: "Análisis de causas", d: "Drill-down Causa → Subcausa → Detalle.", to: "/causas" as const },
-            { icon: Building2, t: "Servicios", d: "Homologación de servicios y ranking confiable.", to: "/servicios" as const },
+            {
+              icon: BarChart3,
+              t: "Dashboard PQRS",
+              d: "Indicadores, filtros y gráficos multidimensionales.",
+              to: "/dashboard" as const,
+            },
+            {
+              icon: LineChart,
+              t: "Análisis de causas",
+              d: "Drill-down Causa → Subcausa → Detalle.",
+              to: "/causas" as const,
+            },
+            {
+              icon: Building2,
+              t: "Servicios",
+              d: "Homologación de servicios y ranking confiable.",
+              to: "/servicios" as const,
+            },
           ].map((c) => (
             <Link
               key={c.t}
@@ -265,7 +282,8 @@ function Inicio() {
               <p className="mt-3 text-sm font-semibold">{c.t}</p>
               <p className="mt-1 text-xs text-muted-foreground">{c.d}</p>
               <span className="mt-3 inline-flex items-center text-xs font-medium text-primary">
-                Abrir <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                Abrir{" "}
+                <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </span>
             </Link>
           ))}

@@ -28,8 +28,8 @@ export const Route = createFileRoute("/dashboard")({
 });
 
 function DashboardPage() {
-  const { data } = useFiltros();
-  const kpis = calcularKpis(data);
+  const { data, periodos } = useFiltros();
+  const kpis = calcularKpis(data, periodos);
 
   return (
     <div className="min-w-0 pb-12">

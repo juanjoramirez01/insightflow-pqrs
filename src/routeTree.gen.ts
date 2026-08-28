@@ -12,11 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CausasRouteImport } from './routes/causas'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as MigracionRouteImport } from './routes/migracion'
 import { Route as RegionalesRouteImport } from './routes/regionales'
 import { Route as ReportesRouteImport } from './routes/reportes'
 import { Route as ServiciosRouteImport } from './routes/servicios'
-import { Route as ApiPublicMigrateZohoRouteImport } from './routes/api/public/migrate-zoho'
+import { Route as ApiCrmPqrsRouteImport } from './routes/api/crm/pqrs'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,11 +30,6 @@ const CausasRoute = CausasRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MigracionRoute = MigracionRouteImport.update({
-  id: '/migracion',
-  path: '/migracion',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegionalesRoute = RegionalesRouteImport.update({
@@ -53,9 +47,9 @@ const ServiciosRoute = ServiciosRouteImport.update({
   path: '/servicios',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiPublicMigrateZohoRoute = ApiPublicMigrateZohoRouteImport.update({
-  id: '/api/public/migrate-zoho',
-  path: '/api/public/migrate-zoho',
+const ApiCrmPqrsRoute = ApiCrmPqrsRouteImport.update({
+  id: '/api/crm/pqrs',
+  path: '/api/crm/pqrs',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -63,32 +57,29 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
-  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
+  '/api/crm/pqrs': typeof ApiCrmPqrsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
-  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
+  '/api/crm/pqrs': typeof ApiCrmPqrsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/causas': typeof CausasRoute
   '/dashboard': typeof DashboardRoute
-  '/migracion': typeof MigracionRoute
   '/regionales': typeof RegionalesRoute
   '/reportes': typeof ReportesRoute
   '/servicios': typeof ServiciosRoute
-  '/api/public/migrate-zoho': typeof ApiPublicMigrateZohoRoute
+  '/api/crm/pqrs': typeof ApiCrmPqrsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -96,42 +87,38 @@ export interface FileRouteTypes {
     | '/'
     | '/causas'
     | '/dashboard'
-    | '/migracion'
     | '/regionales'
     | '/reportes'
     | '/servicios'
-    | '/api/public/migrate-zoho'
+    | '/api/crm/pqrs'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/causas'
     | '/dashboard'
-    | '/migracion'
     | '/regionales'
     | '/reportes'
     | '/servicios'
-    | '/api/public/migrate-zoho'
+    | '/api/crm/pqrs'
   id:
     | '__root__'
     | '/'
     | '/causas'
     | '/dashboard'
-    | '/migracion'
     | '/regionales'
     | '/reportes'
     | '/servicios'
-    | '/api/public/migrate-zoho'
+    | '/api/crm/pqrs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CausasRoute: typeof CausasRoute
   DashboardRoute: typeof DashboardRoute
-  MigracionRoute: typeof MigracionRoute
   RegionalesRoute: typeof RegionalesRoute
   ReportesRoute: typeof ReportesRoute
   ServiciosRoute: typeof ServiciosRoute
-  ApiPublicMigrateZohoRoute: typeof ApiPublicMigrateZohoRoute
+  ApiCrmPqrsRoute: typeof ApiCrmPqrsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -157,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/migracion': {
-      id: '/migracion'
-      path: '/migracion'
-      fullPath: '/migracion'
-      preLoaderRoute: typeof MigracionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/regionales': {
       id: '/regionales'
       path: '/regionales'
@@ -185,11 +165,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServiciosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/migrate-zoho': {
-      id: '/api/public/migrate-zoho'
-      path: '/api/public/migrate-zoho'
-      fullPath: '/api/public/migrate-zoho'
-      preLoaderRoute: typeof ApiPublicMigrateZohoRouteImport
+    '/api/crm/pqrs': {
+      id: '/api/crm/pqrs'
+      path: '/api/crm/pqrs'
+      fullPath: '/api/crm/pqrs'
+      preLoaderRoute: typeof ApiCrmPqrsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -199,11 +179,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CausasRoute: CausasRoute,
   DashboardRoute: DashboardRoute,
-  MigracionRoute: MigracionRoute,
   RegionalesRoute: RegionalesRoute,
   ReportesRoute: ReportesRoute,
   ServiciosRoute: ServiciosRoute,
-  ApiPublicMigrateZohoRoute: ApiPublicMigrateZohoRoute,
+  ApiCrmPqrsRoute: ApiCrmPqrsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

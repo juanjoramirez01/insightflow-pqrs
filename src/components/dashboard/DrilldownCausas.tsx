@@ -14,13 +14,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChartCard, EmptyState } from "./ChartCard";
 import { TooltipBox } from "@/components/charts/ChartTooltip";
-import { detallesDe, subcausasDe, type PqrsRecord } from "@/data/pqrs";
+import type { PqrsRecord } from "@/data/pqrs";
+import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor } from "@/lib/pqrs-metrics";
 import { cn } from "@/lib/utils";
 
 type Nivel = "causa" | "subcausa" | "detalle";
 
 export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
+  const { subcausasDe, detallesDe } = useFiltros();
   const [causa, setCausa] = useState<string | null>(null);
   const [subcausa, setSubcausa] = useState<string | null>(null);
 
@@ -28,9 +30,7 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
 
   const filtrado = useMemo(
     () =>
-      data.filter(
-        (r) => (!causa || r.causa === causa) && (!subcausa || r.subcausa === subcausa),
-      ),
+      data.filter((r) => (!causa || r.causa === causa) && (!subcausa || r.subcausa === subcausa)),
     [data, causa, subcausa],
   );
 
@@ -99,9 +99,20 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
       }
     >
       <div className="flex flex-wrap items-center gap-0.5 rounded-lg bg-muted/60 px-2 py-1.5">
-        {crumb("Todas las causas", nivel === "causa", causa ? () => { setCausa(null); setSubcausa(null); } : undefined)}
+        {crumb(
+          "Todas las causas",
+          nivel === "causa",
+          causa
+            ? () => {
+                setCausa(null);
+                setSubcausa(null);
+              }
+            : undefined,
+        )}
         {causa ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : null}
-        {causa ? crumb(causa, nivel === "subcausa", subcausa ? () => setSubcausa(null) : undefined) : null}
+        {causa
+          ? crumb(causa, nivel === "subcausa", subcausa ? () => setSubcausa(null) : undefined)
+          : null}
         {subcausa ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : null}
         {subcausa ? crumb(subcausa, true) : null}
       </div>
