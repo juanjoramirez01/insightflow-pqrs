@@ -15,56 +15,40 @@ import { Badge } from "@/components/ui/badge";
 import { ChartCard, EmptyState } from "./ChartCard";
 import { TooltipBox } from "@/components/charts/ChartTooltip";
 import type { PqrsRecord } from "@/data/pqrs";
-import { useFiltros } from "@/lib/pqrs-filters";
 import { contarPor } from "@/lib/pqrs-metrics";
-import { cn } from "@/lib/utils";
 
-type Nivel = "causa" | "subcausa" | "detalle";
+type Nivel = "servicio" | "categoria";
 
-// Altura visible máxima: con muchos elementos el gráfico crece hacia adentro
+// Altura visible máxima: con muchas categorías el gráfico crece hacia adentro
 // (scroll propio) en vez de alargar toda la página indefinidamente.
 const ALTURA_MAXIMA_VISIBLE = 480;
 
-export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
-  const { subcausasDe, detallesDe } = useFiltros();
-  const [causa, setCausa] = useState<string | null>(null);
-  const [subcausa, setSubcausa] = useState<string | null>(null);
-
-  const nivel: Nivel = subcausa ? "detalle" : causa ? "subcausa" : "causa";
+/** Igual en interacción a DrilldownCausas, pero con 2 niveles: Servicio -> Categoría específica. */
+export function DrilldownServicios({ data }: { data: PqrsRecord[] }) {
+  const [servicio, setServicio] = useState<string | null>(null);
+  const nivel: Nivel = servicio ? "categoria" : "servicio";
 
   const filtrado = useMemo(
-    () =>
-      data.filter((r) => (!causa || r.causa === causa) && (!subcausa || r.subcausa === subcausa)),
-    [data, causa, subcausa],
+    () => (servicio ? data.filter((r) => r.tipoServicio === servicio) : data),
+    [data, servicio],
   );
 
   const items = useMemo(() => {
-    const key = nivel === "causa" ? "causa" : nivel === "subcausa" ? "subcausa" : "detalle";
+    const key = nivel === "servicio" ? "tipoServicio" : "categoriaServicioEspecifico";
     const conteos = contarPor(filtrado, key as keyof PqrsRecord);
-    const universo =
-      nivel === "subcausa"
-        ? subcausasDe(causa)
-        : nivel === "detalle"
-          ? detallesDe(causa, subcausa)
-          : null;
-    if (!universo) return conteos;
-    const map = new Map(conteos.map((c) => [c.name, c.value]));
-    return universo
-      .map((name) => ({ name, value: map.get(name) ?? 0 }))
-      .sort((a, b) => b.value - a.value);
-  }, [filtrado, nivel, causa, subcausa]);
+    // "Sin categoría" (Categoria_servicio_especifico vacío en Zoho) se oculta
+    // por ahora: la mayoría de los casos aún no la tienen diligenciada y
+    // domina el gráfico sin aportar información accionable.
+    return nivel === "categoria" ? conteos.filter((c) => c.name !== "Sin categoría") : conteos;
+  }, [filtrado, nivel]);
 
   const total = items.reduce((a, b) => a + b.value, 0);
 
   const onBarClick = (name: string) => {
-    if (nivel === "causa") setCausa(name);
-    else if (nivel === "subcausa") setSubcausa(name);
+    if (nivel === "servicio") setServicio(name);
   };
 
-  const retroceder = () => {
-    if (subcausa) setSubcausa(null);
-    else setCausa(null);
-  };
+  const retroceder = () => setServicio(null);
 
   const crumb = (label: string, active: boolean, onClick?: () => void) => (
     <button
@@ -72,25 +56,25 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
       type="button"
       onClick={onClick}
       disabled={!onClick}
-      className={cn(
-        "max-w-[220px] truncate rounded px-1.5 py-0.5 text-xs transition-colors",
-        active
+      className={
+        "max-w-[220px] truncate rounded px-1.5 py-0.5 text-xs transition-colors " +
+        (active
           ? "font-semibold text-foreground"
-          : "text-muted-foreground hover:bg-secondary hover:text-primary",
-      )}
+          : "text-muted-foreground hover:bg-secondary hover:text-primary")
+      }
     >
       {label}
     </button>
   );
 
-  const alturaChart = Math.max(260, items.length * 44);
+  const alturaChart = Math.max(220, items.length * 44);
 
   return (
     <ChartCard
-      title="Análisis de causas raíz"
-      description="Explora la jerarquía Causa principal → Subcausa → Detalle haciendo clic en las barras."
+      title="Servicio → Categoría específica"
+      description="Explora cada tipo de servicio y su categoría específica haciendo clic en las barras."
       action={
-        nivel !== "causa" ? (
+        nivel !== "servicio" ? (
           <Button variant="outline" size="sm" onClick={retroceder}>
             <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
             Nivel anterior
@@ -103,35 +87,24 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
       }
     >
       <div className="flex flex-wrap items-center gap-0.5 rounded-lg bg-muted/60 px-2 py-1.5">
-        {crumb(
-          "Todas las causas",
-          nivel === "causa",
-          causa
-            ? () => {
-                setCausa(null);
-                setSubcausa(null);
-              }
-            : undefined,
-        )}
-        {causa ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : null}
-        {causa
-          ? crumb(causa, nivel === "subcausa", subcausa ? () => setSubcausa(null) : undefined)
-          : null}
-        {subcausa ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : null}
-        {subcausa ? crumb(subcausa, true) : null}
+        {crumb("Todos los servicios", nivel === "servicio", servicio ? retroceder : undefined)}
+        {servicio ? <ChevronRight className="h-3 w-3 text-muted-foreground" /> : null}
+        {servicio ? crumb(servicio, true) : null}
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
         <span>
           Nivel actual:{" "}
           <span className="font-medium text-foreground">
-            {nivel === "causa" ? "Causa principal" : nivel === "subcausa" ? "Subcausa" : "Detalle"}
+            {nivel === "servicio" ? "Tipo de servicio" : "Categoría específica"}
           </span>
         </span>
         <span>
           Total en el nivel: <span className="font-medium text-foreground">{total}</span> PQRS
         </span>
-        {nivel !== "detalle" ? <span>Haz clic en una barra para profundizar.</span> : null}
+        {nivel === "servicio" ? (
+          <span>Haz clic en una barra para ver su categoría específica.</span>
+        ) : null}
       </div>
 
       {total === 0 ? (
@@ -152,18 +125,18 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
                 <YAxis
                   type="category"
                   dataKey="name"
-                  width={190}
+                  width={320}
                   tickLine={false}
                   axisLine={false}
                   tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
-                  tickFormatter={(v: string) => (v.length > 28 ? `${v.slice(0, 27)}…` : v)}
+                  tickFormatter={(v: string) => (v.length > 46 ? `${v.slice(0, 45)}…` : v)}
                 />
                 <Tooltip content={<TooltipBox />} cursor={{ fill: "var(--muted)" }} />
                 <Bar
                   dataKey="value"
                   radius={[0, 6, 6, 0]}
                   onClick={(d: { name?: string }) => d?.name && onBarClick(d.name)}
-                  cursor={nivel === "detalle" ? "default" : "pointer"}
+                  cursor={nivel === "categoria" ? "default" : "pointer"}
                   animationDuration={300}
                 >
                   <LabelList
@@ -175,13 +148,7 @@ export function DrilldownCausas({ data }: { data: PqrsRecord[] }) {
                   {items.map((_, i) => (
                     <Cell
                       key={i}
-                      fill={
-                        nivel === "causa"
-                          ? "var(--chart-1)"
-                          : nivel === "subcausa"
-                            ? "var(--chart-2)"
-                            : "var(--chart-3)"
-                      }
+                      fill={nivel === "servicio" ? "var(--chart-2)" : "var(--chart-5)"}
                     />
                   ))}
                 </Bar>

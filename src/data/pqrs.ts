@@ -28,7 +28,10 @@ export interface PqrsRecord {
   descripcion: string;
   medioRecepcion: string;
   servicioEspecifico: string;
+  categoriaServicioEspecifico: string;
   edad: number | null;
+  fechaVencimiento: string | null; // ISO yyyy-mm-dd, fecha límite de gestión (SLA)
+  fechaCierre: string | null; // ISO yyyy-mm-dd, null si sigue abierta
 }
 
 export const MESES_ES = [

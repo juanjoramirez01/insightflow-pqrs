@@ -105,7 +105,7 @@ export function FiltrosProvider({ children }: { children: ReactNode }) {
 
   const limpiar = useCallback(() => setFiltros(FILTROS_INICIALES), []);
 
-  const todos = query.data?.data ?? [];
+  const todos = useMemo(() => query.data?.data ?? [], [query.data]);
   const data = useMemo(() => aplicarFiltros(todos, filtros), [todos, filtros]);
   const activos = useMemo(
     () => Object.values(filtros).filter((v) => v !== TODOS).length,

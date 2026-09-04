@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Bar,
@@ -37,29 +38,33 @@ export const Route = createFileRoute("/regionales")({
 
 function RegionalesPage() {
   const { data, regionales } = useFiltros();
-  const conteo = contarPor(data, "regional");
   const total = data.length;
+  const conteo = useMemo(() => contarPor(data, "regional"), [data]);
 
-  const detalle = regionales
-    .map((reg) => {
-      const rows = data.filter((r) => r.regional === reg);
-      const causa = contarPor(rows, "causa")[0];
-      const servicio = contarPor(rows, "tipoServicio")[0];
-      const tiempo = rows.length
-        ? Math.round((rows.reduce((a, r) => a + r.tiempoGestion, 0) / rows.length) * 10) / 10
-        : 0;
-      const abiertas = rows.filter((r) => r.estado !== "Cerrada").length;
-      return {
-        reg,
-        total: rows.length,
-        causa: causa?.name ?? "—",
-        servicio: servicio?.name ?? "—",
-        tiempo,
-        abiertas,
-      };
-    })
-    .filter((r) => r.total > 0)
-    .sort((a, b) => b.total - a.total);
+  const detalle = useMemo(
+    () =>
+      regionales
+        .map((reg) => {
+          const rows = data.filter((r) => r.regional === reg);
+          const causa = contarPor(rows, "causa")[0];
+          const servicio = contarPor(rows, "tipoServicio")[0];
+          const tiempo = rows.length
+            ? Math.round((rows.reduce((a, r) => a + r.tiempoGestion, 0) / rows.length) * 10) / 10
+            : 0;
+          const abiertas = rows.filter((r) => r.estado !== "Cerrada").length;
+          return {
+            reg,
+            total: rows.length,
+            causa: causa?.name ?? "—",
+            servicio: servicio?.name ?? "—",
+            tiempo,
+            abiertas,
+          };
+        })
+        .filter((r) => r.total > 0)
+        .sort((a, b) => b.total - a.total),
+    [data, regionales],
+  );
 
   return (
     <div className="min-w-0 pb-12">
@@ -99,7 +104,7 @@ function RegionalesPage() {
                       axisLine={false}
                     />
                     <Tooltip content={<TooltipBox />} cursor={{ fill: "var(--muted)" }} />
-                    <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                    <Bar dataKey="value" radius={[6, 6, 0, 0]} animationDuration={300}>
                       {conteo.map((_, i) => (
                         <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                       ))}

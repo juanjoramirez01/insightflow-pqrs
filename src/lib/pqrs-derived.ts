@@ -1,7 +1,7 @@
 // Cálculos derivados de un conjunto de PQRS (taxonomía, catálogos de filtros,
-// homologación de servicios, rango de fechas...). Antes se calculaban una
-// sola vez a partir del JSON estático; ahora se recalculan con useMemo cada
-// vez que llega un conjunto de datos nuevo (live desde Zoho CRM).
+// rango de fechas...). Antes se calculaban una sola vez a partir del JSON
+// estático; ahora se recalculan con useMemo cada vez que llega un conjunto
+// de datos nuevo (live desde Zoho CRM).
 import type { PqrsRecord } from "@/data/pqrs";
 
 const uniqOrdenado = (data: PqrsRecord[], get: (r: PqrsRecord) => string) => {
@@ -19,13 +19,6 @@ export interface PqrsCatalog {
   regionales: string[];
   analistas: string[];
   prioridades: string[];
-  homologacion: { crm: string; ips: string; casos: number }[];
-  homologacionMetricas: {
-    registrosCrm: number;
-    duplicados: number;
-    homologados: number;
-    porcentaje: number;
-  };
   periodos: string[];
   rangoFechas: { desde: string; hasta: string };
 }
@@ -44,16 +37,6 @@ export function computeCatalog(data: PqrsRecord[]): PqrsCatalog {
   }
 
   const tiposServicio = uniqOrdenado(data, (r) => r.tipoServicio);
-
-  const homologacionMap = new Map<string, { ips: string; casos: number }>();
-  for (const r of data) {
-    const cur = homologacionMap.get(r.servicioRaw);
-    if (cur) cur.casos += 1;
-    else homologacionMap.set(r.servicioRaw, { ips: r.tipoServicio, casos: 1 });
-  }
-  const homologacion = [...homologacionMap.entries()]
-    .map(([crm, v]) => ({ crm, ips: v.ips, casos: v.casos }))
-    .sort((a, b) => b.casos - a.casos);
 
   const periodos = [...new Set(data.map((r) => r.periodo))].sort();
 
@@ -74,13 +57,6 @@ export function computeCatalog(data: PqrsRecord[]): PqrsCatalog {
     regionales: uniqOrdenado(data, (r) => r.regional),
     analistas: uniqOrdenado(data, (r) => r.analista),
     prioridades: uniqOrdenado(data, (r) => r.prioridad),
-    homologacion,
-    homologacionMetricas: {
-      registrosCrm: homologacion.length,
-      duplicados: homologacion.length - tiposServicio.length,
-      homologados: tiposServicio.length,
-      porcentaje: 100,
-    },
     periodos,
     rangoFechas,
   };

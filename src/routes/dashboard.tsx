@@ -1,8 +1,8 @@
+import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { DemoNotice, PageHeader } from "@/components/dashboard/PageHeader";
 import { FiltersPanel } from "@/components/dashboard/FiltersPanel";
 import { KpiRow } from "@/components/dashboard/KpiRow";
-import { DrilldownCausas } from "@/components/dashboard/DrilldownCausas";
 import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
 import { EmptyState } from "@/components/dashboard/ChartCard";
 import { useFiltros } from "@/lib/pqrs-filters";
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/dashboard")({
 
 function DashboardPage() {
   const { data, periodos } = useFiltros();
-  const kpis = calcularKpis(data, periodos);
+  const kpis = useMemo(() => calcularKpis(data, periodos), [data, periodos]);
 
   return (
     <div className="min-w-0 pb-12">
@@ -49,7 +49,6 @@ function DashboardPage() {
         ) : (
           <>
             <KpiRow kpis={kpis} />
-            <DrilldownCausas data={data} />
             <DashboardCharts data={data} />
           </>
         )}

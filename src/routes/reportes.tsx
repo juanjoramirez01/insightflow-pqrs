@@ -57,6 +57,7 @@ function ReportesPage() {
       "servicioRaw",
       "servicioEspecifico",
       "medioRecepcion",
+      "resultado",
       "analista",
       "prioridad",
       "tipoCaso",
@@ -126,6 +127,7 @@ function ReportesPage() {
                       <TableHead>Servicio</TableHead>
                       <TableHead>Servicio específico</TableHead>
                       <TableHead>Medio de recepción</TableHead>
+                      <TableHead>Resultado esperado</TableHead>
                       <TableHead>Responsable</TableHead>
                       <TableHead>Regional</TableHead>
                       <TableHead>Estado</TableHead>
@@ -154,6 +156,9 @@ function ReportesPage() {
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-xs">
                           {r.medioRecepcion}
+                        </TableCell>
+                        <TableCell className="max-w-[200px] truncate text-xs">
+                          {r.resultado || "—"}
                         </TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.analista}</TableCell>
                         <TableCell className="whitespace-nowrap text-xs">{r.regional}</TableCell>

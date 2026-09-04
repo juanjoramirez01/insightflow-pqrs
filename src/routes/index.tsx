@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -41,16 +42,56 @@ export const Route = createFileRoute("/")({
 
 function Inicio() {
   const { todos, regionales, tiposServicio, periodos } = useFiltros();
-  const kpis = calcularKpis(todos, periodos);
-  const causas = contarPor(todos, "causa");
-  const regional = contarPor(todos, "regional")[0];
-  const analista = contarPor(todos, "analista")[0];
-  const servicio = contarPor(todos, "tipoServicio")[0];
-  const serie = tendencia(todos);
-  const variacion =
-    serie.length > 1
-      ? Math.round(((serie[serie.length - 1].value - serie[0].value) / serie[0].value) * 1000) / 10
-      : 0;
+
+  // ~29.000 registros en vivo: se memoiza todo este bloque para que no se
+  // recorra el arreglo completo (8 pasadas) en cada render que no cambie los datos.
+  const {
+    kpis,
+    causas,
+    regional,
+    analista,
+    servicio,
+    tendenciaDireccion,
+    causaTop,
+    subDeCausaTop,
+    detalleTop,
+    resultadoTop,
+  } = useMemo(() => {
+    const causasCalc = contarPor(todos, "causa");
+    const serie = tendencia(todos);
+    // Se compara solo el último mes vs. el anterior (no el primero vs. el
+    // último): con datos en vivo el primer mes histórico tiene muy pocos
+    // registros y esa comparación produce variaciones sin sentido (+800000%).
+    const direccion =
+      serie.length > 1
+        ? serie[serie.length - 1].value === serie[serie.length - 2].value
+          ? "Estable"
+          : serie[serie.length - 1].value > serie[serie.length - 2].value
+            ? "Al alza"
+            : "A la baja"
+        : "Sin datos suficientes";
+
+    const causaTopCalc = causasCalc[0];
+    const subDeCausaTopCalc = causaTopCalc
+      ? contarPor(
+          todos.filter((r) => r.causa === causaTopCalc.name),
+          "subcausa",
+        )[0]
+      : null;
+
+    return {
+      kpis: calcularKpis(todos, periodos),
+      causas: causasCalc,
+      regional: contarPor(todos, "regional")[0],
+      analista: contarPor(todos, "analista")[0],
+      servicio: contarPor(todos, "tipoServicio")[0],
+      tendenciaDireccion: direccion,
+      causaTop: causaTopCalc,
+      subDeCausaTop: subDeCausaTopCalc,
+      detalleTop: contarPor(todos, "detalle").filter((d) => d.name !== "Sin detalle")[0],
+      resultadoTop: contarPor(todos, "resultado").filter((r) => r.name)[0],
+    };
+  }, [todos, periodos]);
 
   const resumen = [
     {
@@ -80,8 +121,8 @@ function Inicio() {
     {
       icon: TrendingUp,
       label: "Tendencia de PQRS",
-      value: `${variacion > 0 ? "+" : ""}${variacion}%`,
-      hint: "Variación del primer al último mes del periodo",
+      value: tendenciaDireccion,
+      hint: "Comparado con el mes anterior",
     },
     {
       icon: Target,
@@ -91,23 +132,28 @@ function Inicio() {
     },
   ];
 
+  // Oportunidades calculadas en vivo a partir de los datos reales (antes eran
+  // 3 textos fijos escritos para el CSV histórico, que podían quedar desactualizados).
   const oportunidades = [
-    {
-      titulo: "Disponibilidad de agenda",
-      texto:
-        "La subcausa Oportunidad concentra los detalles Sin agenda y Agenda lejana: ampliar oferta y monitorear tiempos de asignación.",
-    },
-    {
-      titulo: "Calidad en autorizaciones",
-      texto:
-        "Los errores en CUPS y direccionamiento son evitables: reforzar validación previa y capacitación del equipo autorizador.",
-    },
-    {
-      titulo: "Homologación de servicios",
-      texto:
-        "El CRM registra el tipo de servicio con múltiples variantes de texto; homologarlas permite indicadores comparables.",
-    },
-  ];
+    causaTop && subDeCausaTop
+      ? {
+          titulo: "Causa raíz principal",
+          texto: `"${causaTop.name}" concentra ${causaTop.value.toLocaleString("es-CO")} PQRS (${Math.round((causaTop.value / todos.length) * 100)}% del total); dentro de ella, "${subDeCausaTop.name}" es la subcausa más frecuente.`,
+        }
+      : null,
+    detalleTop
+      ? {
+          titulo: "Detalle operativo más recurrente",
+          texto: `"${detalleTop.name}" aparece en ${detalleTop.value.toLocaleString("es-CO")} PQRS — conviene revisar el proceso operativo asociado.`,
+        }
+      : null,
+    resultadoTop
+      ? {
+          titulo: "Lo que más piden los usuarios",
+          texto: `"${resultadoTop.name}" es el resultado esperado más solicitado (${resultadoTop.value.toLocaleString("es-CO")} PQRS).`,
+        }
+      : null,
+  ].filter((o): o is { titulo: string; texto: string } => o !== null);
 
   return (
     <div className="min-w-0">

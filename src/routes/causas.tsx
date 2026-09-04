@@ -1,10 +1,22 @@
+import { useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { DemoNotice, PageHeader } from "@/components/dashboard/PageHeader";
 import { FiltersPanel } from "@/components/dashboard/FiltersPanel";
 import { DrilldownCausas } from "@/components/dashboard/DrilldownCausas";
 import { ChartCard, EmptyState } from "@/components/dashboard/ChartCard";
+import { TooltipBox } from "@/components/charts/ChartTooltip";
 import { useFiltros } from "@/lib/pqrs-filters";
-import { contarPor } from "@/lib/pqrs-metrics";
+import { CHART_COLORS, contarPor, construirStackedPorSubcausa } from "@/lib/pqrs-metrics";
 
 export const Route = createFileRoute("/causas")({
   head: () => ({
@@ -27,8 +39,13 @@ export const Route = createFileRoute("/causas")({
 
 function CausasPage() {
   const { data, taxonomia } = useFiltros();
-  const porDetalle = contarPor(data, "detalle").slice(0, 10);
   const total = data.length;
+  const porDetalle = useMemo(() => contarPor(data, "detalle").slice(0, 10), [data]);
+  const stackedSubcausa = useMemo(() => construirStackedPorSubcausa(data), [data]);
+  // Con muchas subcausas se prefiere comprimir el alto de cada fila antes que
+  // alargar la página indefinidamente (aquí no se puede hacer scroll interno
+  // sin que la leyenda, que va al fondo del propio gráfico, quede oculta).
+  const alturaStacked = Math.min(560, Math.max(220, stackedSubcausa.rows.length * 60));
 
   return (
     <div className="min-w-0 pb-12">
@@ -93,6 +110,61 @@ function CausasPage() {
                 </div>
               </ChartCard>
             </div>
+
+            <ChartCard
+              title="Detalle asociado por subcausa"
+              description="Composición de los detalles operativos (top 8) dentro de cada subcausa"
+            >
+              {stackedSubcausa.rows.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className="w-full" style={{ height: alturaStacked + 70 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={stackedSubcausa.rows}
+                      layout="vertical"
+                      margin={{ top: 4, right: 24, left: 8, bottom: 4 }}
+                    >
+                      <CartesianGrid horizontal={false} stroke="var(--border)" />
+                      <XAxis
+                        type="number"
+                        tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="subcausa"
+                        width={190}
+                        tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <Tooltip content={<TooltipBox />} cursor={{ fill: "var(--muted)" }} />
+                      <Legend
+                        verticalAlign="bottom"
+                        height={64}
+                        formatter={(v: string) => (
+                          <span className="text-xs text-muted-foreground">
+                            {v.length > 36 ? `${v.slice(0, 35)}…` : v}
+                          </span>
+                        )}
+                      />
+                      {stackedSubcausa.keys.map((key, i) => (
+                        <Bar
+                          key={key}
+                          dataKey={key}
+                          stackId="detalle"
+                          fill={CHART_COLORS[i % CHART_COLORS.length]}
+                          radius={i === stackedSubcausa.keys.length - 1 ? [0, 6, 6, 0] : undefined}
+                          animationDuration={300}
+                        />
+                      ))}
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </ChartCard>
           </>
         )}
       </div>

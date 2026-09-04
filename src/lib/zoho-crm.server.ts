@@ -17,17 +17,19 @@ const FIELDS = [
   "N_mero_Doc",
   "Estado",
   "Causa",
-  "Sub_Clasificaci_n",
   "Detalle_Operativo",
   "Descripci_n",
   "Motivos",
+  "Resultado_Esperado_Usuario",
   "Tipo_de_caso",
   "Tipo_Servicio",
   "Servicio_Especifico",
+  "Categoria_servicio_especifico",
   "Medio_recepcion",
+  "Fecha_de_vencimiento",
   "Regional_EPS",
   "Prioridad",
-  "Owner",
+  "Propietario_del_caso",
   "Requiere_Validacion_Clinica",
   "Edad",
   "Fecha_de_apertura_PQR",
@@ -44,17 +46,19 @@ interface ZohoCase {
   N_mero_Doc?: string | null;
   Estado?: string | null;
   Causa?: string | null;
-  Sub_Clasificaci_n?: string | null;
   Detalle_Operativo?: string | null;
   Descripci_n?: string | null;
   Motivos?: string | null;
+  Resultado_Esperado_Usuario?: string | null;
   Tipo_de_caso?: string | null;
   Tipo_Servicio?: string | null;
   Servicio_Especifico?: string | null;
+  Categoria_servicio_especifico?: string | null;
   Medio_recepcion?: string | null;
+  Fecha_de_vencimiento?: string | null;
   Regional_EPS?: ZohoLookup;
   Prioridad?: string | null;
-  Owner?: ZohoLookup;
+  Propietario_del_caso?: string | null;
   Requiere_Validacion_Clinica?: boolean | string | null;
   Edad?: number | string | null;
   Fecha_de_apertura_PQR?: string | null;
@@ -226,7 +230,7 @@ function mapear(casos: ZohoCase[]): PqrsRecord[] {
       fecha,
       periodo: fecha ? fecha.slice(0, 7) : "",
       causa: c.Causa ?? "Sin causa",
-      subcausa: c.Sub_Clasificaci_n ?? "Sin subcausa",
+      subcausa: c.Motivos ?? "Sin subcausa",
       detalle: c.Detalle_Operativo ?? "Sin detalle",
       servicioRaw,
       // Sin una tabla de homologación validada contra datos reales de Zoho,
@@ -237,8 +241,8 @@ function mapear(casos: ZohoCase[]): PqrsRecord[] {
       estado,
       tipoCaso: normalizarTipoCaso(c.Tipo_de_caso),
       prioridad: c.Prioridad ?? "Sin prioridad",
-      resultado: c.Motivos ?? "",
-      analista: lookupName(c.Owner),
+      resultado: c.Resultado_Esperado_Usuario ?? "",
+      analista: c.Propietario_del_caso ?? "Sin asignar",
       tiempoGestion: fechaCierre ? diasEntre(fecha, fechaCierre) : 0,
       cerrada: estado.startsWith("Cerrada"),
       validacionClinica: toBoolean(c.Requiere_Validacion_Clinica),
@@ -246,7 +250,10 @@ function mapear(casos: ZohoCase[]): PqrsRecord[] {
       descripcion: c.Descripci_n ?? "",
       medioRecepcion: c.Medio_recepcion ?? "Sin especificar",
       servicioEspecifico: c.Servicio_Especifico ?? "",
+      categoriaServicioEspecifico: c.Categoria_servicio_especifico ?? "Sin categoría",
       edad: toNumberOrNull(c.Edad),
+      fechaVencimiento: toDateOnly(c.Fecha_de_vencimiento),
+      fechaCierre,
     } satisfies PqrsRecord;
   });
 }
